@@ -35,8 +35,8 @@ const NewPassword = () => {
 
     try {
       const res = await resetPassword({
-        jwtToken,
-        newPassword: password
+        email: email,
+        password: password
       });
       console.log(res);
       if (res.error) {

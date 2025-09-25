@@ -19,11 +19,12 @@ const SignIn = () => {
   const handleSubmit = async (values) => {
     const { email, password } = values;
     const data = {
-      email, password
+      email, password,
+      loginType: "emailPassword"
     }
     try {
       const res = await login(data).unwrap();
-      console.log(res?.token);
+      console.log(res);
 
       navigate("/");
 
@@ -44,7 +45,8 @@ const SignIn = () => {
 
 
     } catch (error) {
-      toast.error("Something went wrong");
+      console.log(error);
+      toast.error(error?.data?.message || "Something went wrong");
     }
   };
 

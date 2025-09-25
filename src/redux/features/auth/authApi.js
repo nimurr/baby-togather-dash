@@ -5,7 +5,7 @@ const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (data) => ({
-        url: "/sign-in",
+        url: "/auth/login",
         method: "POST",
         body: data,
       }),
@@ -25,21 +25,21 @@ const authApi = baseApi.injectEndpoints({
     }),
     forgotPassword: builder.mutation({
       query: (data) => ({
-        url: "/forgot-password",
+        url: "/auth/forgot-password",
         method: "POST",
         body: data,
       }),
     }),
     verifyEmail: builder.mutation({
       query: (data) => ({
-        url: "/verify-forgot-password-otp",
+        url: "/auth/verify-email",
         method: "POST",
         body: data,
       }),
     }),
     resetPassword: builder.mutation({
       query: (data) => ({
-        url: "/change-admin-password",
+        url: "/auth/reset-password",
         method: "POST",
         body: data,
       }),
