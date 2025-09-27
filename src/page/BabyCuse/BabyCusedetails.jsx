@@ -71,7 +71,7 @@ const BabyCusedetails = () => {
         formData.append('title', title);
         formData.append('content', content);
         formData.append('category', 'BABY_CUES');
-        if (image) {
+        if (image.originFileObj) {
             formData.append('image', image.originFileObj); // Append the actual file object
         }
 
