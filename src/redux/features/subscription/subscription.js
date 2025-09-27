@@ -37,7 +37,7 @@ const subScriptionApi = baseApi.injectEndpoints({
         }),
         getAllSubscribers: builder.query({
             query: () => ({
-                url: `/subscription-plan`, // ✅ Fixed API URL
+                url: `/subscription`, // ✅ Fixed API URL
                 method: "GET",
             }),
             providesTags: ["Subscription"],
@@ -45,4 +45,4 @@ const subScriptionApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useGetSubScriptionQuery, useCreateSubScriptionMutation, useUpdateScriptionMutation, useDeleteSubScriptionMutation } = subScriptionApi;
+export const { useGetSubScriptionQuery, useCreateSubScriptionMutation, useUpdateScriptionMutation, useDeleteSubScriptionMutation , useGetAllSubscribersQuery } = subScriptionApi;
