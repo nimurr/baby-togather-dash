@@ -5,6 +5,7 @@ import { RiDeleteBin6Line, RiEdit2Line } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import { UploadOutlined } from '@ant-design/icons';
 import { IoCloudUploadOutline } from 'react-icons/io5';
+import { useCreateBabucareMutation } from '../../redux/features/babucare/babucare';
 
 const BabyCusedetails = () => {
     const [babyCues, setBabyCues] = useState([
@@ -30,6 +31,11 @@ const BabyCusedetails = () => {
             image: '/category/12.png', // Add image field 
         },
     ]);
+
+    const [createBabycare] = useCreateBabucareMutation();
+
+
+
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentCue, setCurrentCue] = useState(null);
@@ -63,7 +69,7 @@ const BabyCusedetails = () => {
     };
 
     // Handle modal submit (add or edit)
-    const handleModalSubmit = () => {
+    const handleModalSubmit = async () => {
         if (!title || !description) {
             message.error('Please provide both title and description.');
             return;
@@ -79,13 +85,26 @@ const BabyCusedetails = () => {
             );
             message.success('Baby cue updated successfully!');
         } else {
-            const newCue = {
-                id: Date.now(),
-                title,
-                description,
-                image,
-            };
-            setBabyCues((prevCues) => [...prevCues, newCue]);
+            // const newCue = {
+            //     id: Date.now(),
+            //     title,
+            //     description,
+            //     image,
+            // };
+
+            // console.log(newCue);
+
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('content', description);
+            formData.append('category', 'BABY_CUES');
+            if (image) {
+                formData.append('image', image.originFileObj); // Append the actual file object
+            }
+            const res = await createBabycare(formData);
+            console.log(res);
+            // setBabyCues((prevCues) => [...prevCues, newCue]);
+
             message.success('Baby cue added successfully!');
         }
 
