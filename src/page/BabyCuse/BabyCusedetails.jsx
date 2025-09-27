@@ -3,23 +3,27 @@ import { Modal, Input, message, Form, Upload } from 'antd';
 import { FaArrowLeft } from 'react-icons/fa';
 import { RiDeleteBin6Line, RiEdit2Line } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
-import { IoCloudUploadOutline } from 'react-icons/io5';
+import { IoCloudUploadOutline, IoSearch } from 'react-icons/io5';
 import { useCreateBabucareMutation, useDeleteBabucareMutation, useEditBabucareMutation, useGetAllBabucareQuery } from '../../redux/features/babucare/babucare';
 import Url from '../../redux/baseApi/forImageUrl';
 
 const BabyCusedetails = () => {
     const [babyCues, setBabyCues] = useState([]);
+    const [filteredCues, setFilteredCues] = useState([]); // To store filtered cues
+    const [searchQuery, setSearchQuery] = useState(''); // To store search query
 
     const { data } = useGetAllBabucareQuery("BABY_CUES");
     const fullData = data?.data?.attributes;
+
     useEffect(() => {
         if (fullData) {
             setBabyCues(fullData);
+            setFilteredCues(fullData); // Initially, show all cues
         }
     }, [fullData]);
 
     const [createBabycare] = useCreateBabucareMutation();
-    const [editBabycare] = useEditBabucareMutation(); // Edit mutation hook
+    const [editBabycare] = useEditBabucareMutation();
     const [deleteBabucare] = useDeleteBabucareMutation();
 
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -27,14 +31,14 @@ const BabyCusedetails = () => {
     const [currentCue, setCurrentCue] = useState(null);
     const [title, setTitle] = useState('');
     const [content, setDescription] = useState('');
-    const [image, setImage] = useState(null); // New state for image
+    const [image, setImage] = useState(null);
 
     // Open modal for adding a new baby cue
     const handleAddClick = () => {
         setIsEditMode(false);
         setTitle('');
         setDescription('');
-        setImage(null); // Clear the image
+        setImage(null);
         setIsModalVisible(true);
     };
 
@@ -77,14 +81,11 @@ const BabyCusedetails = () => {
 
         try {
             if (isEditMode) {
-                // Edit mode
                 const res = await editBabycare({ id: currentCue._id, data: formData });
-                console.log(res);
                 if (res.data?.code === 200) {
                     message.success(res.data?.message);
                 }
             } else {
-                // Add new cue
                 const res = await createBabycare(formData);
                 if (res.data?.code === 201) {
                     message.success(res.data?.message);
@@ -108,6 +109,18 @@ const BabyCusedetails = () => {
         setImage(fileList[0]); // Set the image after file upload
     };
 
+    // Handle search input change
+    const handleSearchChange = (e) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+
+        // Filter cues based on the search query
+        const filtered = babyCues.filter((cue) =>
+            cue.title.toLowerCase().includes(query.toLowerCase())
+        );
+        setFilteredCues(filtered);
+    };
+
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
@@ -118,16 +131,32 @@ const BabyCusedetails = () => {
                     <FaArrowLeft />
                     <h1>Baby Cues</h1>
                 </Link>
-                <button
-                    onClick={handleAddClick}
-                    className="bg-[#344f47] text-white font-bold py-3 px-10 rounded-lg"
-                >
-                    Add Baby Cue
-                </button>
+                <div className="flex items-center gap-4">
+                    {/* Search input field */}
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Search by title..."
+                            className="border border-[#344f47] px-4 py-2 rounded-full"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                        />
+                        <div>
+                            <IoSearch className="absolute right-4 top-3" />
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={handleAddClick}
+                        className="bg-[#344f47] text-white font-bold py-3 px-10 rounded-lg"
+                    >
+                        Add Baby Cue
+                    </button>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-start gap-4">
-                {babyCues.map((cue) => (
+                {filteredCues.map((cue) => (
                     <div
                         key={cue.id}
                         className="border-2 border-[#344f47] shadow-[0_0_10px_0_rgba(0,0,0,0.2)] p-4 rounded-lg hover:bg-[#f3f3f3] cursor-pointer"
