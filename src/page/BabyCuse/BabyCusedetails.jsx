@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Input, Button, message, Space, Form, Upload } from 'antd';
+import { Modal, Input, message, Form, Upload } from 'antd';
 import { FaArrowLeft } from 'react-icons/fa';
 import { RiDeleteBin6Line, RiEdit2Line } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
-import { UploadOutlined } from '@ant-design/icons';
 import { IoCloudUploadOutline } from 'react-icons/io5';
-import { useCreateBabucareMutation, useGetAllBabucareQuery } from '../../redux/features/babucare/babucare';
+import { useCreateBabucareMutation, useDeleteBabucareMutation, useEditBabucareMutation, useGetAllBabucareQuery } from '../../redux/features/babucare/babucare';
 import Url from '../../redux/baseApi/forImageUrl';
 
 const BabyCusedetails = () => {
-    const [babyCues, setBabyCues] = useState([
-    ]);
+    const [babyCues, setBabyCues] = useState([]);
 
     const { data } = useGetAllBabucareQuery("BABY_CUES");
     const fullData = data?.data?.attributes;
@@ -21,14 +19,14 @@ const BabyCusedetails = () => {
     }, [fullData]);
 
     const [createBabycare] = useCreateBabucareMutation();
-
-
+    const [editBabycare] = useEditBabucareMutation(); // Edit mutation hook
+    const [deleteBabucare] = useDeleteBabucareMutation();
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentCue, setCurrentCue] = useState(null);
     const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+    const [content, setDescription] = useState('');
     const [image, setImage] = useState(null); // New state for image
 
     // Open modal for adding a new baby cue
@@ -45,54 +43,56 @@ const BabyCusedetails = () => {
         setIsEditMode(true);
         setCurrentCue(cue);
         setTitle(cue.title);
-        setDescription(cue.description);
+        setDescription(cue.content); // Adjusted from 'description' to 'content'
         setImage(cue.image); // Set the image for edit
         setIsModalVisible(true);
     };
 
     // Handle delete action
-    const handleDeleteClick = (data) => {
-        console.log(data?._id);
+    const handleDeleteClick = async (cue) => {
+        try {
+            const res = await deleteBabucare(cue._id);
+            if (res?.data?.code === 200) {
+                message.success(res?.data?.message);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     // Handle modal submit (add or edit)
     const handleModalSubmit = async () => {
-        if (!title || !description) {
-            message.error('Please provide both title and description.');
+        if (!title || !content) {
+            message.error('Please provide both title and content.');
             return;
         }
 
-        if (isEditMode) {
-            setBabyCues((prevCues) =>
-                prevCues.map((cue) =>
-                    cue.id === currentCue.id
-                        ? { ...cue, title, description, image }
-                        : cue
-                )
-            );
-            message.success('Baby cue updated successfully!');
-        } else {
-            // const newCue = {
-            //     id: Date.now(),
-            //     title,
-            //     description,
-            //     image,
-            // };
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('content', content);
+        formData.append('category', 'BABY_CUES');
+        if (image) {
+            formData.append('image', image.originFileObj); // Append the actual file object
+        }
 
-            // console.log(newCue);
-
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('content', description);
-            formData.append('category', 'BABY_CUES');
-            if (image) {
-                formData.append('image', image.originFileObj); // Append the actual file object
+        try {
+            if (isEditMode) {
+                // Edit mode
+                const res = await editBabycare({ id: currentCue._id, data: formData });
+                console.log(res);
+                if (res.data?.code === 200) {
+                    message.success(res.data?.message);
+                }
+            } else {
+                // Add new cue
+                const res = await createBabycare(formData);
+                if (res.data?.code === 201) {
+                    message.success(res.data?.message);
+                }
             }
-            const res = await createBabycare(formData);
-            console.log(res);
-            // setBabyCues((prevCues) => [...prevCues, newCue]);
-
-            message.success('Baby cue added successfully!');
+        } catch (error) {
+            console.log(error);
+            message.error('An error occurred.');
         }
 
         setIsModalVisible(false);
@@ -126,22 +126,22 @@ const BabyCusedetails = () => {
                 </button>
             </div>
 
-            <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-start gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-start gap-4">
                 {babyCues.map((cue) => (
                     <div
                         key={cue.id}
-                        className=" border-2 border-[#344f47] shadow-[0_0_10px_0_rgba(0,0,0,0.2)] p-4 rounded-lg hover:bg-[#f3f3f3] cursor-pointer"
+                        className="border-2 border-[#344f47] shadow-[0_0_10px_0_rgba(0,0,0,0.2)] p-4 rounded-lg hover:bg-[#f3f3f3] cursor-pointer"
                     >
                         <div>
-                            <h3 className="text-xl mb-3 font-semibold text-[#344f47] flex items-center gap-2 "><img
-                                src={Url + cue.image}
-                                alt={cue.title}
-                                className="w-8 object-cover rounded-lg "
-                            />
+                            <h3 className="text-xl mb-3 font-semibold text-[#344f47] flex items-center gap-2">
+                                <img
+                                    src={Url + cue.image}
+                                    alt={cue.title}
+                                    className="w-8 object-cover rounded-lg"
+                                />
                                 {cue.title}
                             </h3>
                             <p className="text-sm text-gray-500">{cue.content}</p>
-
                         </div>
 
                         <hr className="my-2" />
@@ -149,7 +149,7 @@ const BabyCusedetails = () => {
                         <div className="flex justify-end gap-2">
                             <button
                                 onClick={() => handleEditClick(cue)}
-                                className="text-[#fff] h-10 w-10 bg-[#344f47]  rounded-full flex items-center justify-center hover:bg-[#2c3e50] transition-colors duration-200"
+                                className="text-[#fff] h-10 w-10 bg-[#344f47] rounded-full flex items-center justify-center hover:bg-[#2c3e50] transition-colors duration-200"
                             >
                                 <RiEdit2Line size={20} />
                             </button>
@@ -183,20 +183,20 @@ const BabyCusedetails = () => {
                 <Form layout="vertical">
                     <Form.Item label="Title" required>
                         <Input
-                            className="py-3 "
+                            className="py-3"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder="Enter baby cue title"
                         />
                     </Form.Item>
 
-                    <Form.Item label="Description" required>
+                    <Form.Item label="Content" required>
                         <Input.TextArea
-                            className="py-3 "
-                            value={description}
+                            className="py-3"
+                            value={content}
                             onChange={(e) => setDescription(e.target.value)}
                             rows={4}
-                            placeholder="Enter baby cue description"
+                            placeholder="Enter baby cue content"
                         />
                     </Form.Item>
 
@@ -212,7 +212,7 @@ const BabyCusedetails = () => {
                                 <IoCloudUploadOutline size={40} />
                             </p>
                             <p className="ant-upload-text">
-                                {image ? 'Change Image' : 'Click or drag image to this area to upload'}
+                                {image ? 'Image Uploaded! Click to Change Image' : 'Click or drag image to this area to upload'}
                             </p>
                         </Upload.Dragger>
                     </Form.Item>
