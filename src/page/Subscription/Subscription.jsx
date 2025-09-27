@@ -4,58 +4,26 @@ import { FaPlus } from 'react-icons/fa';
 import { AiFillCrown } from 'react-icons/ai';
 import { FaRegCircleCheck } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
+import { useCreateSubScriptionMutation } from '../../redux/features/subscription/subscription'; // API hooks
 
 const Subscription = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
     const [subscriptionName, setSubscriptionName] = useState('');
     const [unitType, setUnitType] = useState('1-3 Units');
     const [monthlyType, setMonthlyType] = useState('1');
     const [price, setPrice] = useState('');
-    const [id, setId] = useState('');
+    const [features, setFeatures] = useState([]); // Store features dynamically
 
-    // Demo data for subscriptions
-    const subscriptions = [
-        {
-            id: 1,
-            name: 'Solo',
-            unitType: '1-3 Units',
-            type: 'Monthly',
-            price: '$9.00',
-        },
-        {
-            id: 2,
-            name: 'Family Plan',
-            unitType: '4-6 Units',
-            type: 'yearly',
-            price: '$20.00',
-        },
-        {
-            id: 3,
-            name: 'Other Plan',
-            unitType: '4-8 Units',
-            type: 'yearly',
-            price: '$50.00',
-        },
-    ];
+    const [createSubscription, { isLoading }] = useCreateSubScriptionMutation(); // Create subscription mutation
 
-    // Handle open modal for adding or editing
-    const showModal = (edit = false, subscription = {}) => {
-        setIsEditing(edit);
+    // Handle open modal for adding a new subscription
+    const showModal = () => {
         setIsModalVisible(true);
-        if (edit) {
-            setSubscriptionName(subscription.name);
-            setUnitType(subscription.unitType);
-            setMonthlyType(subscription.monthlyType);
-            setPrice(subscription.price);
-            setId(subscription.id); // Pre-fill for editing
-        } else {
-            setSubscriptionName('');
-            setUnitType('1-3 Units');
-            setMonthlyType('1');
-            setPrice('');
-            setId(null);
-        }
+        setSubscriptionName('');
+        setUnitType('1-3 Units');
+        setMonthlyType('1');
+        setPrice('');
+        setFeatures([]); // Reset features when opening the modal
     };
 
     // Handle modal close
@@ -65,127 +33,84 @@ const Subscription = () => {
         setUnitType('1-3 Units');
         setMonthlyType('1');
         setPrice('');
+        setFeatures([]); // Clear features when closing the modal
     };
 
-    // Handle form submit for adding/editing subscription
+    // Handle form submit for adding subscription
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!subscriptionName || !unitType || !monthlyType || !price) {
-            message.error('Please fill all fields!');
+        if (!subscriptionName || !unitType || !monthlyType || !price || features.length === 0) {
+            message.error('Please fill all fields and add at least one feature!');
             return;
         }
 
         const formData = {
-            name: subscriptionName,
-            unitType,
-            monthlyType,
-            price,
+            title: subscriptionName, // Subscription name
+            features: features, // Array of features
+            amount: parseFloat(price), // Subscription price as a float
+            type: monthlyType === '1' ? 'weekly' : monthlyType === '2' ? 'monthly' : 'yearly', // Subscription type
         };
 
-        // Simulating the create subscription
+        // Call the create subscription API
         try {
-            console.log('New subscription created:', formData);
-            message.success('Subscription added successfully!');
-            handleCancel();
+            const response = await createSubscription(formData);
+            console.log(response);
+            if (response?.data?.code === 201) {
+                message.success('Subscription added successfully!');
+                handleCancel(); // Close the modal after successful submission
+                // reset 
+                setSubscriptionName('');
+                setUnitType('1-3 Units');
+                setMonthlyType('1');
+                setPrice('');
+                setFeatures([]);
+            }
         } catch (error) {
             console.log(error);
             message.error('Something went wrong');
         }
     };
 
-    const handleUpdate = async (e) => {
-        e.preventDefault();
-        const formData = {
-            name: subscriptionName,
-            unitType,
-            monthlyType,
-            price,
-            id,
-        };
-
-        // Simulating the update subscription
-        try {
-            console.log('Updated subscription:', formData);
-            message.success('Subscription updated successfully!');
-            handleCancel();
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const handleDelete = async (subscription) => {
-        try {
-            // Simulating the delete subscription
-            console.log('Deleted subscription ID:', subscription.id);
-            message.success('Subscription deleted successfully!');
-        } catch (error) {
-            console.log(error);
-            message.error('Something went wrong');
+    // Handle adding a new feature
+    const handleAddFeature = () => {
+        const feature = document.getElementById('feature-input').value;
+        if (feature && !features.includes(feature)) {
+            setFeatures([...features, feature]);
+            document.getElementById('feature-input').value = ''; // Clear input after adding
+        } else {
+            message.error('Please enter a valid feature!');
         }
     };
 
     return (
         <section>
-            <div className="w-full md:flex justify-end items-center gap-2 flex-wrap py-6">
+            <div className="w-full flex justify-end items-center gap-2 flex-wrap py-6">
                 <Link
                     to="/subscription/user-list"
-                    className="text-xl px-2 md:px-5 py-3 border border-[#344f47] text-[#344f47] flex justify-center items-center gap-1 rounded md:mb-0"
+                    className="text-xl px-8 py-3 border border-[#344f47] text-[#344f47] rounded"
                 >
                     Subscriptions User
                 </Link>
                 <button
                     type="button"
-                    className="text-xl px-2 md:px-5 py-3 bg-[#344f47] text-white flex justify-center items-center gap-1 rounded md:mb-0"
-                    onClick={() => showModal(false)}
+                    className="text-xl px-5 py-3 bg-[#344f47] text-white flex justify-center items-center gap-1 rounded md:mb-0"
+                    onClick={showModal} // Open modal for adding new subscription
                 >
                     <FaPlus className="text-xl font-semibold text-white" /> Add Subscription
                 </button>
             </div>
 
             {/* Subscriptions Grid */}
-            <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-2 gap-5">
-                {subscriptions.map((subscription) => (
-                    <div key={subscription.id} className="border-2 border-[#344f47]  rounded-lg overflow-hidden">
-                        <div className='p-5'>
-                            <h2 className=" text-3xl font-semibold text-[#344f47] flex items-center gap-2
-                            ">
-                                <div className='h-10 w-10 rounded-full bg-[#344f47] text-white flex justify-center items-center'>
-                                    <AiFillCrown className="size-6" />
-                                </div>
-                                {subscription.name}
-                            </h2>
-                            <h3 className='text-2xl font-semibold mt-5'>Unite type</h3>
-                            <p className=" mt-2 font-semibold text-xl gap-2   flex items-center"><FaRegCircleCheck className='text-[#344f47]' /> {subscription.unitType}</p>
-                        </div>
-                        <div className='border-t-2 border-b-2 border-[#344f47] py-2 text-center my-3'>
-                            <p className=" text-5xl font-semibold text-[#344f47] gap-2  ">  {subscription.price} <span className='text-base font-semibold text-black '>/ {subscription.type}</span></p>
-                        </div>
-                        <div className=" gap-3 p-5 ">
-                            <button
-                                onClick={() => handleDelete(subscription)}
-                                className="w-full py-3 mb-2 px-6 border border-[#344f47] text-[#344f47] rounded-lg"
-                            >
-                                Delete
-                            </button>
-                            <button
-                                onClick={() => showModal(true, subscription)}
-                                className="w-full py-3 px-6 border bg-[#344f47] text-white rounded-lg"
-                            >
-                                Edit Package
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
+            {/* Subscriptions will be displayed here (you can populate this part with your data) */}
 
-            {/* Modal for adding/editing subscription */}
+            {/* Modal for adding subscription */}
             <Modal
-                title={isEditing ? 'Edit Subscription' : 'Add Subscription'}
+                title="Add Subscription"
                 visible={isModalVisible}
                 onCancel={handleCancel}
                 footer={null} // Remove default cancel and ok buttons
             >
-                <form onSubmit={isEditing ? handleUpdate : handleSubmit} action="">
+                <form onSubmit={handleSubmit} action="">
                     <div className="mb-4">
                         <span className="block mb-2 font-semibold">Subscription Name</span>
                         <Input
@@ -197,16 +122,30 @@ const Subscription = () => {
                     </div>
 
                     <div className="my-3">
-                        <span className="block mb-2 font-semibold">Unit Type</span>
-                        <Select
-                            className="w-full h-12"
-                            value={unitType}
-                            onChange={(value) => setUnitType(value)}
-                        >
-                            <Select.Option value="1-3 Units">1 - 3 Units</Select.Option>
-                            <Select.Option value="4-6 Units">4 - 6 Units</Select.Option>
-                            <Select.Option value="7+ Units">7+ Units</Select.Option>
-                        </Select>
+                        <span className="block mb-2 font-semibold">Features</span>
+                        <div>
+                            <input
+                                type="text"
+                                id="feature-input"
+                                className="w-full py-3 border border-gray-300 rounded-lg px-3"
+                                placeholder="Enter feature"
+                            />
+                            <button
+                                type="button"
+                                onClick={handleAddFeature}
+                                className="mt-2 w-full py-2 px-5 bg-[#344f47] text-white rounded-lg"
+                            >
+                                Add Feature
+                            </button>
+                        </div>
+                        <div className="mt-4">
+                            <span className="block mb-2 font-semibold">Added Features:</span>
+                            <ul className="list-disc pl-6">
+                                {features.map((feature, index) => (
+                                    <li key={index} className="text-gray-600">{feature}</li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
 
                     <div className="my-3">
@@ -225,7 +164,7 @@ const Subscription = () => {
                     <div className="mb-4">
                         <span className="block mb-2 font-semibold">Subscription Price</span>
                         <Input
-                            className='w-full py-3'
+                            className="w-full py-3"
                             placeholder="Enter price"
                             value={price}
                             type="number"
@@ -233,9 +172,13 @@ const Subscription = () => {
                         />
                     </div>
 
-
-                    <button type="primary" htmlType="submit" className="w-full py-3 px-5 rounded-lg bg-[#344f47] text-white">
-                        {isEditing ? 'Update Subscription' : 'Add Subscription'}
+                    <button
+                        type="submit"
+                        htmlType="submit"
+                        className="w-full py-3 px-5 rounded-lg bg-[#344f47] text-white"
+                        disabled={isLoading} // Disable the button while loading
+                    >
+                        {isLoading ? 'Adding...' : 'Add Subscription'}
                     </button>
                 </form>
             </Modal>

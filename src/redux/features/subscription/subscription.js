@@ -5,7 +5,7 @@ const subScriptionApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getSubScription: builder.query({
             query: () => ({
-                url: `/subscription-packages`, // ✅ Fixed API URL
+                url: `/subscription-plan`, // ✅ Fixed API URL
                 method: "GET",
             }),
             providesTags: ["Subscription"],
