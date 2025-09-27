@@ -1,3 +1,3 @@
-const Url = 'https://apurbo6000.sobhoy.com'
+const Url = 'http://10.10.11.88:8086'
 
 export default Url

@@ -1,36 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Input, Button, message, Space, Form, Upload } from 'antd';
 import { FaArrowLeft } from 'react-icons/fa';
 import { RiDeleteBin6Line, RiEdit2Line } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import { UploadOutlined } from '@ant-design/icons';
 import { IoCloudUploadOutline } from 'react-icons/io5';
-import { useCreateBabucareMutation } from '../../redux/features/babucare/babucare';
+import { useCreateBabucareMutation, useGetAllBabucareQuery } from '../../redux/features/babucare/babucare';
+import Url from '../../redux/baseApi/forImageUrl';
 
 const BabyCusedetails = () => {
     const [babyCues, setBabyCues] = useState([
-        {
-            id: 1,
-            title: 'Fist clenching',
-            description:
-                'Clenched fists are often a sign of stress or discomfort. Baby may be hungry, overstimulated, or adjusting to a new sensation.',
-            image: '/category/12.png', // Add image field 
-        },
-        {
-            id: 2,
-            title: 'Fist clenching',
-            description:
-                'Clenched fists are often a sign of stress or discomfort. Baby may be hungry, overstimulated, or adjusting to a new sensation.',
-            image: '/category/12.png', // Add image field 
-        },
-        {
-            id: 3,
-            title: 'Fist clenching',
-            description:
-                'Clenched fists are often a sign of stress or discomfort. Baby may be hungry, overstimulated, or adjusting to a new sensation.',
-            image: '/category/12.png', // Add image field 
-        },
     ]);
+
+    const { data } = useGetAllBabucareQuery("BABY_CUES");
+    const fullData = data?.data?.attributes;
+    useEffect(() => {
+        if (fullData) {
+            setBabyCues(fullData);
+        }
+    }, [fullData]);
 
     const [createBabycare] = useCreateBabucareMutation();
 
@@ -63,9 +51,8 @@ const BabyCusedetails = () => {
     };
 
     // Handle delete action
-    const handleDeleteClick = (id) => {
-        setBabyCues((prevCues) => prevCues.filter((cue) => cue.id !== id));
-        message.success('Baby cue deleted successfully!');
+    const handleDeleteClick = (data) => {
+        console.log(data?._id);
     };
 
     // Handle modal submit (add or edit)
@@ -147,13 +134,13 @@ const BabyCusedetails = () => {
                     >
                         <div>
                             <h3 className="text-xl mb-3 font-semibold text-[#344f47] flex items-center gap-2 "><img
-                                src={cue.image}
+                                src={Url + cue.image}
                                 alt={cue.title}
                                 className="w-8 object-cover rounded-lg "
                             />
                                 {cue.title}
                             </h3>
-                            <p className="text-sm text-gray-500">{cue.description}</p>
+                            <p className="text-sm text-gray-500">{cue.content}</p>
 
                         </div>
 
@@ -167,7 +154,7 @@ const BabyCusedetails = () => {
                                 <RiEdit2Line size={20} />
                             </button>
                             <button
-                                onClick={() => handleDeleteClick(cue.id)}
+                                onClick={() => handleDeleteClick(cue)}
                                 className="text-[#fff] h-10 w-10 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors duration-200"
                             >
                                 <RiDeleteBin6Line size={20} />

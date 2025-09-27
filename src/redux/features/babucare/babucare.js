@@ -9,15 +9,15 @@ const babucareApi = baseApi.injectEndpoints({
                 body: data,
             }),
         }),
-
-
         getAllBabucare: builder.query({
-            query: () => ({
-                url: "/babucare",
+            query: ( type ) => ({
+                url: `/baby-care/${type}/all`,
                 method: "GET",
             }),
         }),
+
+
     }),
 })
 
-export const { useGetAllBabucareQuery, useCreateBabucareMutation } = babucareApi;
+export const { useCreateBabucareMutation, useGetAllBabucareQuery } = babucareApi;
