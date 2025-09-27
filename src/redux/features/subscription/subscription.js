@@ -12,7 +12,7 @@ const subScriptionApi = baseApi.injectEndpoints({
         }),
         createSubScription: builder.mutation({
             query: (formData) => ({
-                url: `/subscription/add`, // ✅ Fixed API URL
+                url: `/subscription-plan`, // ✅ Fixed API URL
                 method: "POST",
                 body: formData,
 
