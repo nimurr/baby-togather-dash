@@ -10,6 +10,9 @@ import Url from '../../redux/baseApi/forImageUrl'; // To handle image URLs
 
 const BabyCuseSounddetails = () => {
     const [babyCues, setBabyCues] = useState([]);
+    const [filteredCues, setFilteredCues] = useState([]); // To store filtered cues
+    const [searchQuery, setSearchQuery] = useState(''); // To store search query
+
     const { data } = useGetAllBabucareQuery("CALM_SPACE"); // Fetch all baby sound cues
     const [createBabycare] = useCreateBabucareMutation(); // For creating new cue
     const [editBabycare] = useEditBabucareMutation(); // For editing an existing cue
@@ -26,6 +29,7 @@ const BabyCuseSounddetails = () => {
     useEffect(() => {
         if (data?.data?.attributes) {
             setBabyCues(data?.data?.attributes); // Set the cues fetched from API
+            setFilteredCues(data?.data?.attributes); // Initially show all cues
         }
     }, [data]);
 
@@ -108,6 +112,18 @@ const BabyCuseSounddetails = () => {
         setAudio(fileList[0]); // Set the audio file after upload
     };
 
+    // Handle search input change
+    const handleSearchChange = (e) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+
+        // Filter cues based on the search query (title search)
+        const filtered = babyCues.filter((cue) =>
+            cue.title.toLowerCase().includes(query.toLowerCase())
+        );
+        setFilteredCues(filtered);
+    };
+
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
@@ -123,8 +139,10 @@ const BabyCuseSounddetails = () => {
                     <div className="relative">
                         <input
                             type="text"
-                            placeholder="Search..."
+                            placeholder="Search by title..."
                             className="border border-[#344f47] px-4 py-2 rounded-full"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
                         />
                         <div>
                             <IoSearch className="absolute right-4 top-3" />
@@ -141,7 +159,7 @@ const BabyCuseSounddetails = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-start gap-4">
-                {babyCues.map((cue) => (
+                {filteredCues.map((cue) => (
                     <div
                         key={cue.id}
                         className="border-2 border-[#344f47] shadow-[0_0_10px_0_rgba(0,0,0,0.2)] p-4 rounded-2xl hover:bg-[#344f4718] cursor-pointer"
@@ -158,13 +176,12 @@ const BabyCuseSounddetails = () => {
                                 </h3>
                                 <p className="text-sm text-gray-500">{cue.content}</p>
                                 {cue.audio && (
-                                    <audio controls className='min-w-48 max-w-60'>
+                                    <audio controls className="min-w-48 max-w-60">
                                         <source src={Url + cue.audio} type="audio/mp3" />
                                         Your browser does not support the audio element.
                                     </audio>
                                 )}
                             </div>
-                            {/* <FaCirclePlay className="ml-2 text-2xl text-[#344f47]" /> */}
                         </div>
 
                         <hr className="my-2" />
@@ -187,7 +204,7 @@ const BabyCuseSounddetails = () => {
                 ))}
             </div>
 
-            {/* Modal for Add/Edit Baby Cue */}
+            {/* Modal for Add/Edit Sound Cue */}
             <Modal
                 title={isEditMode ? 'Edit Sound Cue' : 'Add Sound Cue'}
                 visible={isModalVisible}
@@ -209,7 +226,7 @@ const BabyCuseSounddetails = () => {
                             className="py-3"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            placeholder="Enter baby cue title"
+                            placeholder="Enter sound cue title"
                         />
                     </Form.Item>
 
@@ -219,7 +236,7 @@ const BabyCuseSounddetails = () => {
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             rows={4}
-                            placeholder="Enter baby cue content"
+                            placeholder="Enter sound cue content"
                         />
                     </Form.Item>
 
