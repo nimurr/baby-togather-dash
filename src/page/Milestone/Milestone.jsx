@@ -40,7 +40,7 @@ const Milestone = () => {
         <div>
             <div className='flex justify-between items-center p-4 '>
                 <Link className='text-2xl font-bold text-[#344f47] hover:text-[#344f47] flex items-center gap-2' to="/milestone">
-                    <FaArrowLeft />Milestone
+                    <FaArrowLeft />Baby's Journey
                 </Link>
                 <div>
                     <button onClick={showModal} className='bg-[#344f47] hover:bg-[#344f47] text-white font-bold py-3 px-10 rounded-lg'>

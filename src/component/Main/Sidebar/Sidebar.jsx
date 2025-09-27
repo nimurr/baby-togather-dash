@@ -39,7 +39,7 @@ const sidebarItems = [
   },
   {
     path: "/milestone",
-    name: "Milestone",
+    name: "Baby's Journey",
     icon: <TfiCup className="size-6" />,
   },
 
