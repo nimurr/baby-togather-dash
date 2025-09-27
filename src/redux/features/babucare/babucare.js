@@ -15,6 +15,13 @@ const babucareApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
         }),
+        deleteBabucare: builder.mutation({
+            query: (data) => ({
+                url: `/baby-care/delete`,
+                method: "POST",
+                body: data,
+            }),
+        }),
 
 
     }),
