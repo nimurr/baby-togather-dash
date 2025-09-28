@@ -158,7 +158,6 @@ const SubscriptionUserList = () => {
                         <div onClick={() => setDetailsVisible(false)} className="absolute bg-[#344f47] text-white p-3 rounded-full -top-5 -left-5 cursor-pointer" >
                             <FaArrowLeft className="text-2xl" />
                         </div>
-
                         {/* User Profile Section */}
                         <div className="flex items-center justify-between gap-5 mb-5">
                             <div className="flex items-center gap-5">
