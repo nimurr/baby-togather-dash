@@ -6,14 +6,16 @@ import { LuImagePlus } from "react-icons/lu";
 import defaultUserImage from "/public/Auth/user.png";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { useGetUserProfileQuery, useUpdateProfileMutation } from "../../redux/features/setting/settingApi";
 import Url from "../../redux/baseApi/forImageUrl";
+import { useGetUserQuery, useUpdateUserMutation } from "../../redux/features/profile/profileApi";
 
 const PersonalinfoEdit = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
-    const { data: userProfile, isLoading, refetch } = useGetUserProfileQuery();
-    const user = userProfile?.data;
+
+    const { data: userProfile, refetch } = useGetUserQuery();
+    const user = userProfile?.data?.attributes?.user;
+
 
     const [fileList, setFileList] = useState([]);
     const [imageUrl, setImageUrl] = useState(defaultUserImage);
@@ -27,8 +29,12 @@ const PersonalinfoEdit = () => {
                 name: user.fullName || "",
                 email: user.email || "",
             });
-            setPhoneNumber(user.phoneNumber || "");
-            setImageUrl(user.profileImageUrl ? Url + user.profileImageUrl : defaultUserImage);
+            if (user.countryISOCode === user.phoneNumber?.slice(0, 2)) {
+                console.log(user.countryISOCode + user.phoneNumber.slice(2));
+            }
+
+            setPhoneNumber(user.countryISOCode + user.phoneNumber || "");
+            setImageUrl(user.image ? Url + user.image : defaultUserImage);
         }
     }, [user, form]);
 
@@ -45,18 +51,20 @@ const PersonalinfoEdit = () => {
     // ✅ **Handle Form Submission**
 
 
-    const [updateProfile] = useUpdateProfileMutation();
+    const [updateProfile] = useUpdateUserMutation();
     useEffect(() => {
         refetch();
     }, [refetch]);
 
     const handleUpdateProfile = async (values) => {
         const formData = new FormData();
-        formData.append("name", values.name);
+        formData.append("fullName", values.name);
+        // countryISOCode, phoneNumber
         formData.append("phoneNumber", phoneNumber);
 
+
         if (fileList[0]?.originFileObj) {
-            formData.append("imageOfProfile", fileList[0].originFileObj);
+            formData.append("image", fileList[0].originFileObj);
         }
 
         try {
@@ -125,7 +133,7 @@ const PersonalinfoEdit = () => {
                                         onChange={setPhoneNumber}
                                         international
                                         defaultCountry="bd"
-                                        className="rounded-lg border-gray-300 py-3 focus:ring-blue-500 focus:border-blue-500 border-2 px-2"
+                                        className="rounded-lg focus:outline-none focus:ring-2 border-gray-300 py-3 focus:ring-blue-500 focus:border-blue-500 border-2 px-2"
                                     />
                                 </div>
                             </div>

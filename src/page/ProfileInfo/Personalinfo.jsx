@@ -3,16 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import User_Profile from "/public/Auth/user.png";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
-import { useGetUserProfileQuery } from "../../redux/features/setting/settingApi";
 import Url from "../../redux/baseApi/forImageUrl";
 import { useEffect } from "react";
+import { useGetUserQuery } from "../../redux/features/profile/profileApi";
 
 const Personalinfo = () => {
     const navigate = useNavigate();
 
-    const { data: userProfile, refetch } = useGetUserProfileQuery();
+    const { data: userProfile, refetch } = useGetUserQuery();
 
-    const user = userProfile?.data;
+    const user = userProfile?.data?.attributes?.user;
     console.log(user);
 
     useEffect(() => {

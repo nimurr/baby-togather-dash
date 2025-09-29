@@ -24,9 +24,10 @@ const SignIn = () => {
     }
     try {
       const res = await login(data).unwrap();
-      console.log(res);
+      console.log(res?.data?.attributes?.tokens?.access?.token);
 
-      navigate("/");
+
+      // navigate("/");
 
       if (res.error) {
         toast.error(res.error.data.message);
@@ -35,7 +36,7 @@ const SignIn = () => {
       if (res) {
         dispatch(
           loggedUser({
-            token: res?.token
+            token: res?.data?.attributes?.tokens?.access?.token
           })
         );
         toast.success(res?.message);

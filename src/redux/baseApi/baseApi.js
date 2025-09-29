@@ -9,6 +9,7 @@ export const baseApi = createApi({
     prepareHeaders: (headers, { getState }) => {
       // Retrieve the token from your store or local storage
       const token = getState().auth.token;
+     
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
@@ -18,3 +19,5 @@ export const baseApi = createApi({
   tagTypes: ["User", "Categories", "Babucare", "ComboBox", "Products", "BuildBox", 'User-2', "Subscription", "Setting", 'Privacy-Policy', "Profile", "Document", "Lawyer"],
   endpoints: () => ({}),
 });
+
+// res?.data?.attributes?.tokens?.access?.token
