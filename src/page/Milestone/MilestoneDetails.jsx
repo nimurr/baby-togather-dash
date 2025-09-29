@@ -62,7 +62,7 @@ const MilestoneDetails = () => {
         setNewActivity('');
     };
 
-    // Function to handle deleting an activity
+    // Function to handle deleting an activity 
     const handleDelete = (id) => {
         const updatedActivities = activities.filter((activity) => activity.id !== id);
         setActivities(updatedActivities);
