@@ -117,10 +117,10 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           } transition-transform duration-300 ease-in-out md:hidden`}
       >
         <div onClick={toggleSidebar} className="absolute top-0 right-0 p-4">
-          <RxCross1 className="size-6 text-black" />
+          <RxCross1 className="size-6 text-white" />
         </div>
-        <div className="flex flex-col justify-center items-center pt-5 gap-2 bg-white text-white">
-          <img src={logo} alt="logo" className="h-20 mb-5" />
+        <div className="flex flex-col justify-center items-center pt-5 gap-2 ">
+          <img src={logoimage} alt="logo" className="h-20 mb-5" />
         </div>
         <ul className="flex flex-col gap-3 mt-10">
           {sidebarItems.map((item) => (
