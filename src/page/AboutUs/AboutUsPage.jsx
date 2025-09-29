@@ -3,15 +3,15 @@ import { Link } from "react-router-dom";
 import { TbEdit } from "react-icons/tb";
 import CustomButton from "../../utils/CustomButton";
 import { Spin } from "antd"; // Importing Spin
-import { useGetAllSettingsQuery } from "../../redux/features/setting/settingApi";
 import { useEffect } from "react";
+import { useGetAllSettingsOthersQuery } from "../../redux/features/setting/getAllData";
 
 const AboutUsPage = () => {
 
-
-  const { data: privacyPolicy, isLoading, refetch } = useGetAllSettingsQuery();
-
-  console.log(privacyPolicy?.termsAndConditions);
+  const type = "about_us"
+  const { data, isLoading, refetch } = useGetAllSettingsOthersQuery(type);
+  const content = data?.data?.attributes?.content;
+  console.log(content);
 
   useEffect(() => {
     refetch();
@@ -45,7 +45,7 @@ const AboutUsPage = () => {
           <Spin size="large" />
         </div>
       ) : (
-        <div dangerouslySetInnerHTML={{ __html: privacyPolicy?.aboutUs }} />
+        <div dangerouslySetInnerHTML={{ __html: content }} />
       )}
 
 

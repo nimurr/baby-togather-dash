@@ -2,9 +2,9 @@ import { baseApi } from "../../baseApi/baseApi";
 
 const settingAllApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getAllSettings: builder.query({
-            query: () => ({
-                url: "/general-info",
+        getAllSettingsOthers: builder.query({
+            query: (type) => ({
+                url: `/agreement/details?type=${type}`,
                 method: "GET",
                 providesTags: ["Setting"],
             }),
@@ -12,4 +12,4 @@ const settingAllApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useGetAllSettingsQuery } = settingAllApi;
+export const { useGetAllSettingsOthersQuery } = settingAllApi;

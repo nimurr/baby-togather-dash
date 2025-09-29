@@ -2,22 +2,35 @@ import { IoChevronBack } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill"; // Import React Quill
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form, message } from "antd";
 import { useUpdatePrivacyPolicyAllMutation } from "../../redux/features/setting/settingApi"; // ✅ FIXED
+import { useGetAllSettingsOthersQuery } from "../../redux/features/setting/getAllData";
 
 const EditPrivacyPolicy = () => {
   const [form] = Form.useForm();
   const [content, setContent] = useState(""); // Default content for the privacy policy
 
+  const type = "privacy_policy";
+  const { data, isLoading: loading, refetch } = useGetAllSettingsOthersQuery(type);
+  const contentMain = data?.data?.attributes?.content || ""; // Ensure default content is empty if not available
+
   const [updatePrivacyPolicy, { isLoading }] = useUpdatePrivacyPolicyAllMutation(); // ✅ FIXED
   const navigate = useNavigate();
 
+  // ✅ **Ensure content is set when data is available**
+  useEffect(() => {
+    if (contentMain) {
+      setContent(contentMain); // Set content when fetched data is available
+    }
+  }, [contentMain]);
+
   const handleSubmit = async () => {
     console.log("Updated Privacy Policy Content:", content);
+    const data = { content, type: "privacy_policy" }
 
     try {
-      const res = await updatePrivacyPolicy({ privacyPolicy: content }).unwrap();
+      const res = await updatePrivacyPolicy(data).unwrap();
       if (res?.success) {
         message.success(res?.message);
         navigate("/settings/privacy-policy");
@@ -30,7 +43,7 @@ const EditPrivacyPolicy = () => {
   };
 
   return (
-    <section className="w-full h-full min-h-screen ">
+    <section className="w-full h-full min-h-screen">
       {/* Header Section */}
       <div className="flex justify-between items-center py-5">
         <Link to="/settings" className="flex gap-4 items-center">
@@ -45,8 +58,9 @@ const EditPrivacyPolicy = () => {
           {/* React Quill for Privacy Policy Content */}
           <Form.Item name="content" initialValue={content}>
             <ReactQuill
-              value={content}
-              onChange={(value) => setContent(value)}
+              value={content} // Controlled component with state value
+              onChange={(value) => setContent(value)} // Update state on change
+              placeholder="Write your privacy policy here..."
               modules={{
                 toolbar: [
                   [{ header: [1, 2, 3, 4, 5, 6, false] }],

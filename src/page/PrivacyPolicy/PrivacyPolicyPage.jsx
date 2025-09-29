@@ -2,15 +2,16 @@ import { IoChevronBack } from "react-icons/io5";
 import { TbEdit } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import CustomButton from "../../utils/CustomButton";
-import { Spin } from "antd"; // Importing Spin  
-import { useGetAllSettingsQuery } from "../../redux/features/setting/settingApi";
+import { Spin } from "antd"; // Importing Spin   
 import { useEffect } from "react";
+import { useGetAllSettingsOthersQuery } from "../../redux/features/setting/getAllData";
 
 const PrivacyPolicyPage = () => {
 
-  const { data: privacyPolicy, isLoading, refetch } = useGetAllSettingsQuery();
+  const type = "privacy_policy"
+  const { data, isLoading, refetch } = useGetAllSettingsOthersQuery(type);
+  const content = data?.data?.attributes?.content;
 
-  console.log(privacyPolicy);
 
   useEffect(() => {
     refetch();
@@ -42,7 +43,7 @@ const PrivacyPolicyPage = () => {
         </div>
       ) : (
         <div className="w-full h-full ml-3">
-          <div dangerouslySetInnerHTML={{ __html: privacyPolicy?.privacyPolicy }} />
+          <div dangerouslySetInnerHTML={{ __html: content }} />
 
         </div>
       )}

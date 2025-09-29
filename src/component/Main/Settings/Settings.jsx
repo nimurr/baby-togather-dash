@@ -9,7 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import CustomInput from "../../../utils/CustomInput";
 import CustomButton from "../../../utils/CustomButton";
 import { useState } from "react";
-import { useChangePasswordMutation } from "../../../redux/features/auth/authApi";
+import { useChangePasswordMutation } from "../../../redux/features/profile/profileApi";
 
 const Settings = () => {
   // const { user } = useSelector(state => state?.auth) 
