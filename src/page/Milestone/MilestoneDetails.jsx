@@ -73,7 +73,7 @@ const MilestoneDetails = () => {
         <div className="p-4">
             {/* Header with Add Button */}
             <div className='flex justify-between items-center mb-10'>
-                <Link className='text-2xl flex items-center gap-2 font-bold text-[#344f47] hover:text-[#344f47]' to="/baby-cuse">
+                <Link className='text-2xl flex items-center gap-2 font-bold text-[#344f47] hover:text-[#344f47]' to="/milestone">
                     <FaArrowLeft /> Month 1
                 </Link>
             </div>
