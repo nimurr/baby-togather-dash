@@ -60,6 +60,7 @@ const EditTermsConditions = () => {
             <ReactQuill
               value={content}
               onChange={(value) => setContent(value)}
+              placeholder="Write your Terms and Conditions here..."
               modules={{
                 toolbar: [
                   [{ header: [1, 2, 3, 4, 5, 6, false] }], // Header dropdown

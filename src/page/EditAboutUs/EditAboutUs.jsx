@@ -55,7 +55,8 @@ const EditAboutUs = () => {
           <Form.Item name="content">
             <ReactQuill
               value={content} // Directly use content as the value
-              defaultValue={content} // Default value              
+              defaultValue={content} // Default value        
+              placeholder="Write your About Us here..."
               onChange={setContent} // Update state
               modules={{
                 toolbar: [
