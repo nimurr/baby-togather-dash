@@ -16,6 +16,7 @@ const PersonalinfoEdit = () => {
     const { data: userProfile, refetch } = useGetUserQuery();
     const user = userProfile?.data?.attributes?.user;
 
+    console.log(user);
 
     const [fileList, setFileList] = useState([]);
     const [imageUrl, setImageUrl] = useState(defaultUserImage);
@@ -29,10 +30,6 @@ const PersonalinfoEdit = () => {
                 name: user.fullName || "",
                 email: user.email || "",
             });
-            if (user.countryISOCode === user.phoneNumber?.slice(0, 2)) {
-                console.log(user.countryISOCode + user.phoneNumber.slice(2));
-            }
-
             setPhoneNumber(user.countryISOCode + user.phoneNumber || "");
             setImageUrl(user.image ? Url + user.image : defaultUserImage);
         }
@@ -61,7 +58,6 @@ const PersonalinfoEdit = () => {
         formData.append("fullName", values.name);
         // countryISOCode, phoneNumber
         formData.append("phoneNumber", phoneNumber);
-
 
         if (fileList[0]?.originFileObj) {
             formData.append("image", fileList[0].originFileObj);
