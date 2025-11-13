@@ -44,8 +44,7 @@ const BabyCuseSouthingdetails = () => {
         setCurrentCue(cue);
         setTitle(cue.title);
         setDescription(cue.content);
-        setImage(cue.image);
-        // If editing, prefill fileList with existing image
+        setImage(null); // Make sure the image is cleared when editing
         setFileList(cue.image ? [{ uid: '-1', name: 'image', status: 'done', url: Url + cue.image }] : []);
         setIsModalVisible(true);
     };
@@ -71,8 +70,8 @@ const BabyCuseSouthingdetails = () => {
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
-        formData.append('category', 'SOOTHING');
-        if (image?.originFileObj) formData.append('image', image.originFileObj);
+        formData.append('category', 'Soothing');
+        if (image?.originFileObj) formData.append('image', image.originFileObj); // Add image if exists
 
         try {
             if (isEditMode) {
@@ -101,7 +100,7 @@ const BabyCuseSouthingdetails = () => {
 
     const handleImageChange = ({ fileList }) => {
         setFileList(fileList);
-        setImage(fileList[0] || null);
+        setImage(fileList[0] || null); // Set the image from the fileList
     };
 
     // Reset form after successful submit
@@ -190,9 +189,9 @@ const BabyCuseSouthingdetails = () => {
                     </Form.Item>
 
                     <Form.Item label="Upload Image" required>
-                        <Upload.Dragger name="file" listType="picture-card" beforeUpload={() => false} onChange={handleImageChange} fileList={fileList} showUploadList={false}>
+                        <Upload.Dragger value={image} name="file" listType="picture-card" beforeUpload={() => false} onChange={handleImageChange} fileList={fileList} showUploadList={false}>
                             <p className="ant-upload-drag-icon flex items-center justify-center"><IoCloudUploadOutline size={40} /></p>
-                            <p className="ant-upload-text">{fileList.length > 0 ? 'Change Image' : 'Click or drag image to this area to upload'}</p>
+                            <p className="ant-upload-text">{fileList?.length < 1 ? 'Image will be uploaded' : 'Image will be updated'}</p>
                         </Upload.Dragger>
                     </Form.Item>
                 </Form>
