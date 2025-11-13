@@ -81,9 +81,13 @@ const Settings = () => {
         message.success(res?.message);
         setIsModalOpen(false);
       }
+      else {
+        message.error(res?.data?.message);
+      }
 
     } catch (error) {
       console.log(error);
+      message.error(error?.data?.message);
     }
 
 

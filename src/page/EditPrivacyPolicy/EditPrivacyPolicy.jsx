@@ -31,11 +31,13 @@ const EditPrivacyPolicy = () => {
 
     try {
       const res = await updatePrivacyPolicy(data).unwrap();
-      if (res?.success) {
+      if (res?.code === 201) {
         message.success(res?.message);
         navigate("/settings/privacy-policy");
       }
-      console.log("Success:", res);
+      if (res?.status === 500) {
+        message.error(res?.data?.message);
+      }
     } catch (error) {
       console.log("Error updating privacy policy:", error);
       message.error("Failed to update privacy policy");
