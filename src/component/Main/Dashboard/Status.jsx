@@ -4,6 +4,8 @@ import { FaArrowTrendUp } from "react-icons/fa6";
 
 const Status = () => {
   const { data, isLoading } = useGetDashboardStatusQuery();
+  const fullData = data?.data?.attributes;
+  console.log(fullData)
 
   return (
     <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
@@ -16,10 +18,10 @@ const Status = () => {
         </div>
         <div className="flex items-center mt-5 gap-3">
           <h1 className="text-4xl font-semibold text-[#222222]">
-            {data?.totalNumberOfUser || "500"}
+            {fullData?.totalUsers || "00"}
           </h1>
-          <p className="bg-[#19f1361f] text-[#159726] rounded-lg px-2 py-1 flex items-center gap-1"> <FaArrowTrendUp className="text-[#159726]" /> 20%</p>
-          <h1>Last month total  1050</h1>
+          {/* <p className="bg-[#19f1361f] text-[#159726] rounded-lg px-2 py-1 flex items-center gap-1"> <FaArrowTrendUp className="text-[#159726]" /> 20%</p>
+          <h1>Last month total  1050</h1> */}
         </div>
       </div>
       {/* Total Renter User Card */}
@@ -30,9 +32,9 @@ const Status = () => {
         </div>
         <div className="flex items-center mt-5 gap-3">
           <h1 className="text-4xl font-semibold text-[#222222]">
-            {data?.totalNumberOfUser || "500"}
+            {data?.babyCare || "0"}
           </h1>
-          <h1>Last month total  1050</h1>
+          {/* <h1>Last month total  1050</h1> */}
         </div>
       </div>
       {/* Total Renter User Card */}
@@ -43,7 +45,7 @@ const Status = () => {
         </div>
         <div className="flex items-center mt-5 gap-3">
           <h1 className="text-4xl font-semibold text-[#222222]">
-            {data?.totalNumberOfUser || "30"}
+            {data?.journey || "0"}
           </h1>
         </div>
       </div>

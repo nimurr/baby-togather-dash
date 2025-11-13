@@ -4,7 +4,7 @@ const dashboardApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getDashboardStatus: builder.query({
       query: () => ({
-        url: "/get-dashboard-data",
+        url: "/dashboard",
         method: "GET",
       }),
       transformResponse: (response) => response,
