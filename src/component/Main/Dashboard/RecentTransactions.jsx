@@ -3,8 +3,15 @@ import { useState } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import dayjs from "dayjs"; // Ensure dayjs is imported
 import { IoEyeOutline } from "react-icons/io5";
+import { useGetDashboardStatusQuery } from "../../../redux/features/dashboard/dashboardApi";
+import Url from "../../../redux/baseApi/forImageUrl";
 
 const RecentTransactions = () => {
+
+  const { data, isLoading } = useGetDashboardStatusQuery();
+  const fullData = data?.data?.attributes;
+  console.log(fullData?.users)
+
   const [searchText, setSearchText] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentPage, setCurrentPage] = useState(1); // Track the current page
@@ -12,17 +19,6 @@ const RecentTransactions = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null); // Store selected user details
 
-  // Demo data for users
-  const demoUserData = [
-    { id: 1, fullName: "John Doe", email: "john.doe@example.com", role: "Admin", createdAt: "2023-06-16T12:00:00Z" },
-    { id: 2, fullName: "Jane Smith", email: "jane.smith@example.com", role: "User", createdAt: "2023-06-14T12:00:00Z" },
-    { id: 3, fullName: "Bob Johnson", email: "bob.johnson@example.com", role: "Manager", createdAt: "2023-05-25T12:00:00Z" },
-    { id: 4, fullName: "Alice Williams", email: "alice.williams@example.com", role: "User", createdAt: "2023-06-01T12:00:00Z" },
-    { id: 5, fullName: "Charlie Brown", email: "charlie.brown@example.com", role: "User", createdAt: "2023-04-18T12:00:00Z" },
-    { id: 6, fullName: "David White", email: "david.white@example.com", role: "Admin", createdAt: "2023-06-08T12:00:00Z" },
-    { id: 7, fullName: "Eva Green", email: "eva.green@example.com", role: "User", createdAt: "2023-03-22T12:00:00Z" },
-    { id: 8, fullName: "Frank Harris", email: "frank.harris@example.com", role: "Manager", createdAt: "2023-06-10T12:00:00Z" },
-  ];
 
   // Handle User Blocking (Demo)
   const handleUserRemove = (id) => {
@@ -58,6 +54,12 @@ const RecentTransactions = () => {
       dataIndex: "userName",
       key: "userName",
       align: "center",
+      render: (text, record, index) => (
+        <div className="flex items-center gap-2">
+          <img className="w-10 rounded-full h-10" src={Url + record?.image} alt="" />
+          <h2>{record?.userName}</h2>
+        </div>
+      )
     },
     {
       title: "Email",
@@ -91,7 +93,7 @@ const RecentTransactions = () => {
     },
   ];
 
-  const filteredData = demoUserData.filter((user) => {
+  const filteredData = fullData?.users?.filter((user) => {
     const matchesText =
       `${user.fullName}`.toLowerCase().includes(searchText.toLowerCase());
     const matchesDate = selectedDate
@@ -112,6 +114,7 @@ const RecentTransactions = () => {
     si: (currentPage - 1) * pageSize + index + 1, // Correct the serial number based on page
     userName: `${user?.fullName}`,
     email: user.email,
+    image: user.image,
     role: user.role,
     joinDate: dayjs(user.createdAt).format("YYYY-MM-DD"),
   }));
@@ -168,7 +171,12 @@ const RecentTransactions = () => {
         {selectedUser && (
           <div>
             <h2 className="text-2xl font-semibold text-center mb-10">User Details</h2>
-            <p className="flex items-center justify-between my-5"><strong>Name:</strong> {selectedUser.userName}</p>
+            <p className="flex items-center justify-between my-5"><strong>Name:</strong>
+              <div className="flex items-center gap-2">
+                <img className="w-8 h-8 rounded-full" src={Url + selectedUser.image} alt="" />
+                {selectedUser.userName}
+              </div>
+            </p>
             <p className="flex items-center justify-between my-5"><strong>Email:</strong> {selectedUser.email}</p>
             <p className="flex items-center justify-between my-5"><strong>Role:</strong> {selectedUser.role}</p>
             <p className="flex items-center justify-between my-5"><strong>Join Date:</strong> {selectedUser.joinDate}</p>

@@ -1,3 +1,3 @@
-const Url = 'http://10.10.11.88:8086'
+const Url = 'https://togbaby.sobhoy.com'
 
 export default Url

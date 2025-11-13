@@ -4,8 +4,7 @@ import { FaArrowTrendUp } from "react-icons/fa6";
 
 const Status = () => {
   const { data, isLoading } = useGetDashboardStatusQuery();
-  const fullData = data?.data?.attributes;
-  console.log(fullData)
+  const fullData = data?.data?.attributes; 
 
   return (
     <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
