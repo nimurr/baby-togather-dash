@@ -10,7 +10,7 @@ import Url from '../../redux/baseApi/forImageUrl';
 const BabyCuseSouthingdetails = () => {
     const [babyCues, setBabyCues] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const { data } = useGetAllBabucareQuery("SOOTHING");
+    const { data } = useGetAllBabucareQuery("Soothing");
     const [createBabycare] = useCreateBabucareMutation();
     const [editBabycare] = useEditBabucareMutation();
     const [deleteBabucare] = useDeleteBabucareMutation();
@@ -26,7 +26,7 @@ const BabyCuseSouthingdetails = () => {
     // Load cues from API
     useEffect(() => {
         if (data?.data?.attributes) {
-            setBabyCues(data?.data?.attributes);
+            setBabyCues(data?.data?.attributes?.results);
         }
     }, [data]);
 
@@ -76,7 +76,7 @@ const BabyCuseSouthingdetails = () => {
 
         try {
             if (isEditMode) {
-                const res = await editBabycare({ id: currentCue._id, data: formData });
+                const res = await editBabycare({ id: currentCue.id, data: formData });
                 if (res?.data?.code === 200) {
                     message.success(res?.data?.message);
                     setIsModalVisible(false);
@@ -150,7 +150,7 @@ const BabyCuseSouthingdetails = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 items-start gap-4">
-                {filteredCues.map((cue) => (
+                {filteredCues?.map((cue) => (
                     <div key={cue.id} className="border-2 border-[#f9e4c8] shadow-lg p-2 rounded-lg hover:bg-[#f3f3f3] cursor-pointer">
                         <div className="mb-4 flex items-center">
                             <img src={Url + cue.image} alt={cue.title} className="w-full object-cover mr-2 border" />
@@ -166,7 +166,7 @@ const BabyCuseSouthingdetails = () => {
                             <button onClick={() => handleEditClick(cue)} className="text-white h-10 w-10 bg-[#344f47] rounded-full flex items-center justify-center hover:bg-[#2c3e50] transition-colors duration-200">
                                 <RiEdit2Line size={20} />
                             </button>
-                            <button onClick={() => handleDeleteClick(cue._id)} className="text-white h-10 w-10 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors duration-200">
+                            <button onClick={() => handleDeleteClick(cue.id)} className="text-white h-10 w-10 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors duration-200">
                                 <RiDeleteBin6Line size={20} />
                             </button>
                         </div>
