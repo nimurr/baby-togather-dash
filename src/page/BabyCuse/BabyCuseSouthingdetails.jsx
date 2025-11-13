@@ -463,7 +463,7 @@ const BabyCuseSouthingdetails = () => {
                             <p className="ant-upload-text">
                                 {audio ? ' Image Uploaded' : 'Click or drag audio to this area to upload'}
                             </p>
-                        </Upload.Dragger> 
+                        </Upload.Dragger>
                     </Form.Item>
                 </Form>
             </Modal>
