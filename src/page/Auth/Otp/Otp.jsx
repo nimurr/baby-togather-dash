@@ -37,7 +37,8 @@ const Otp = () => {
         navigate(`/auth/new-password/${email}`);
       }
     } catch (error) {
-      toast.error("Something went wrong");
+      console.log(error)
+      toast.error(error?.data?.message);
     }
   };
 
