@@ -12,8 +12,9 @@ const BabyCusedetails = () => {
     const [filteredCues, setFilteredCues] = useState([]); // To store filtered cues
     const [searchQuery, setSearchQuery] = useState(''); // To store search query
 
-    const { data } = useGetAllBabucareQuery("BABY_CUES");
-    const fullData = data?.data?.attributes;
+    const { data } = useGetAllBabucareQuery("Baby Cues");
+    const fullData = data?.data?.attributes?.results;
+    console.log(fullData)
 
     useEffect(() => {
         if (fullData) {
@@ -55,7 +56,7 @@ const BabyCusedetails = () => {
     // Handle delete action
     const handleDeleteClick = async (cue) => {
         try {
-            const res = await deleteBabucare(cue._id);
+            const res = await deleteBabucare(cue.id);
             if (res?.data?.code === 200) {
                 message.success(res?.data?.message);
             }
@@ -74,21 +75,25 @@ const BabyCusedetails = () => {
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
-        formData.append('category', 'BABY_CUES');
+        formData.append('category', 'Baby Cues');
         if (image.originFileObj) {
             formData.append('image', image.originFileObj); // Append the actual file object
         }
 
         try {
             if (isEditMode) {
-                const res = await editBabycare({ id: currentCue._id, data: formData });
+                const res = await editBabycare({ id: currentCue.id, data: formData });
                 if (res.data?.code === 200) {
                     message.success(res.data?.message);
                 }
             } else {
                 const res = await createBabycare(formData);
+                console.log(res)
                 if (res.data?.code === 201) {
                     message.success(res.data?.message);
+                }
+                else {
+                    message.error(res?.error?.data?.message);
                 }
             }
         } catch (error) {
@@ -156,7 +161,7 @@ const BabyCusedetails = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-start gap-4">
-                {filteredCues.map((cue) => (
+                {filteredCues?.map((cue) => (
                     <div
                         key={cue.id}
                         className="border-2 border-[#344f47] shadow-[0_0_10px_0_rgba(0,0,0,0.2)] p-4 rounded-lg hover:bg-[#f3f3f3] cursor-pointer"

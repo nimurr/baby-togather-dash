@@ -4,7 +4,7 @@ const babucareApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getAllBabucare: builder.query({
             query: (type) => ({
-                url: `/baby-care/${type}/all`,
+                url: `/baby-care/all?category=${type}`,
                 method: "GET",
             }),
             providesTags: ["Babucare"],
