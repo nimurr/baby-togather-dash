@@ -104,12 +104,12 @@ const RecentTransactions = () => {
   });
 
   // Paginate the filtered data
-  const paginatedData = filteredData.slice(
+  const paginatedData = filteredData?.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
 
-  const dataSource = paginatedData.map((user, index) => ({
+  const dataSource = paginatedData?.map((user, index) => ({
     key: user.id,
     si: (currentPage - 1) * pageSize + index + 1, // Correct the serial number based on page
     userName: `${user?.fullName}`,
@@ -151,7 +151,7 @@ const RecentTransactions = () => {
         <Pagination
           current={currentPage}
           pageSize={pageSize}
-          total={filteredData.length}
+          total={filteredData?.length}
           onChange={(page, pageSize) => {
             setCurrentPage(page);
             setPageSize(pageSize);
@@ -173,13 +173,13 @@ const RecentTransactions = () => {
             <h2 className="text-2xl font-semibold text-center mb-10">User Details</h2>
             <p className="flex items-center justify-between my-5"><strong>Name:</strong>
               <div className="flex items-center gap-2">
-                <img className="w-8 h-8 rounded-full" src={Url + selectedUser.image} alt="" />
-                {selectedUser.userName}
+                <img className="w-8 h-8 rounded-full" src={Url + selectedUser?.image} alt="" />
+                {selectedUser?.userName}
               </div>
             </p>
-            <p className="flex items-center justify-between my-5"><strong>Email:</strong> {selectedUser.email}</p>
-            <p className="flex items-center justify-between my-5"><strong>Role:</strong> {selectedUser.role}</p>
-            <p className="flex items-center justify-between my-5"><strong>Join Date:</strong> {selectedUser.joinDate}</p>
+            <p className="flex items-center justify-between my-5"><strong>Email:</strong> {selectedUser?.email}</p>
+            <p className="flex items-center justify-between my-5"><strong>Role:</strong> {selectedUser?.role}</p>
+            <p className="flex items-center justify-between my-5"><strong>Join Date:</strong> {selectedUser?.joinDate}</p>
           </div>
         )}
       </Modal>

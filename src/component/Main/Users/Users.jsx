@@ -11,17 +11,7 @@ import { useGetAllUsersQuery } from "../../../redux/features/user/userApi";
 const { Item } = Form;
 
 const Users = () => {
-  // // Demo data (simulating fetched data)
-  // const demoUserData = [
-  //   { id: 1, fullName: "John Doe", accountID: "A123", email: "john.doe@example.com", phoneNumber: "123-456-7890", address_line1: "123 Main St", createdAt: "2023-06-10", status: "active", gender: "male", image: { url: "" } },
-  //   { id: 2, fullName: "Jane Smith", accountID: "A124", email: "jane.smith@example.com", phoneNumber: "987-654-3210", address_line1: "456 Oak St", createdAt: "2023-06-05", status: "inactive", gender: "female", image: { url: "" } },
-  //   { id: 3, fullName: "Bob Johnson", accountID: "A125", email: "bob.johnson@example.com", phoneNumber: "555-123-4567", address_line1: "789 Pine St", createdAt: "2023-06-15", status: "active", gender: "male", image: { url: "" } },
-  //   { id: 4, fullName: "Alice Williams", accountID: "A126", email: "alice.williams@example.com", phoneNumber: "444-555-6789", address_line1: "101 Maple St", createdAt: "2023-05-25", status: "active", gender: "female", image: { url: "" } },
-  //   { id: 5, fullName: "Charlie Brown", accountID: "A127", email: "charlie.brown@example.com", phoneNumber: "222-333-4444", address_line1: "202 Birch St", createdAt: "2023-04-18", status: "inactive", gender: "male", image: { url: "" } },
-  //   { id: 6, fullName: "David White", accountID: "A128", email: "david.white@example.com", phoneNumber: "111-222-3333", address_line1: "303 Cedar St", createdAt: "2023-06-01", status: "active", gender: "male", image: { url: "" } },
-  //   { id: 7, fullName: "Eva Green", accountID: "A129", email: "eva.green@example.com", phoneNumber: "999-888-7777", address_line1: "404 Elm St", createdAt: "2023-03-22", status: "inactive", gender: "female", image: { url: "" } },
-  //   { id: 8, fullName: "Frank Harris", accountID: "A130", email: "frank.harris@example.com", phoneNumber: "333-444-5555", address_line1: "505 Birchwood St", createdAt: "2023-06-10", status: "active", gender: "male", image: { url: "" } },
-  // ];
+
 
   const { data: mainData, isLoading } = useGetAllUsersQuery();
   const data = mainData?.data?.attributes?.results || [];
@@ -146,7 +136,7 @@ const Users = () => {
           <Table
             loading={isLoading}
             pagination={{
-              position: ["bottomCenter"],
+              position: ["bottomRight"],
               current: currentPage,
               onChange: setCurrentPage,
             }}
