@@ -5,14 +5,14 @@ const subScriptionApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getSubScription: builder.query({
             query: () => ({
-                url: `/subscription-plan`, // ✅ Fixed API URL
+                url: `/subscription`, // ✅ Fixed API URL
                 method: "GET",
             }),
             providesTags: ["Subscription"],
         }),
         createSubScription: builder.mutation({
             query: (formData) => ({
-                url: `/subscription-plan`, // ✅ Fixed API URL
+                url: `/subscription`, // ✅ Fixed API URL
                 method: "POST",
                 body: formData,
 
@@ -21,7 +21,7 @@ const subScriptionApi = baseApi.injectEndpoints({
         }),
         updateScription: builder.mutation({
             query: ({ id, formData }) => ({
-                url: `/subscription-plan/${id}`, // ✅ Fixed API URL
+                url: `/subscription/${id}`, // ✅ Fixed API URL
                 method: "PATCH",
                 body: formData,
             }),
@@ -30,7 +30,7 @@ const subScriptionApi = baseApi.injectEndpoints({
 
         deleteSubScription: builder.mutation({
             query: (id) => ({
-                url: `/subscription-plan/${id}`, // ✅ Fixed API URL
+                url: `/subscription/${id}`, // ✅ Fixed API URL
                 method: "DELETE",
             }),
             invalidatesTags: ["Subscription"],
@@ -45,4 +45,4 @@ const subScriptionApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useGetSubScriptionQuery, useCreateSubScriptionMutation, useUpdateScriptionMutation, useDeleteSubScriptionMutation , useGetAllSubscribersQuery } = subScriptionApi;
+export const { useGetSubScriptionQuery, useCreateSubScriptionMutation, useUpdateScriptionMutation, useDeleteSubScriptionMutation, useGetAllSubscribersQuery } = subScriptionApi;

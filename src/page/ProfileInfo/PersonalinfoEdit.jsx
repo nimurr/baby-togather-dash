@@ -66,9 +66,9 @@ const PersonalinfoEdit = () => {
         try {
 
             const response = await updateProfile(formData).unwrap();
-            console.log(response);
-            if (response?.code) {
-                message.success(response?.message);
+            console.log("update User ", response);
+            if (response) {
+                message.success("Profile updated successfully!");
                 navigate("/settings/personal-info");
             }
 

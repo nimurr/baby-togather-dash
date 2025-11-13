@@ -13,7 +13,7 @@ const Personalinfo = () => {
     const { data: userProfile, refetch } = useGetUserQuery();
 
     const user = userProfile?.data?.attributes?.user;
-    console.log(user);
+    console.log(userProfile);
 
     useEffect(() => {
         refetch();
@@ -30,7 +30,7 @@ const Personalinfo = () => {
                 <div className="lg:w-1/3 flex flex-col border border-dotted p-4 justify-center items-center gap-8">
                     <img
                         className="w-40 h-40 border p-2 rounded-full"
-                        src={user?.profileImageUrl ? Url + user?.profileImageUrl : User_Profile}
+                        src={user?.image ? Url + user?.image : User_Profile}
                         alt="User Profile"
                     />
                     <div className="flex flex-col justify-center items-center text-center">
@@ -78,7 +78,7 @@ const Personalinfo = () => {
                             </label>
                             <Input
                                 placeholder="Phone"
-                                value={user?.phoneNumber}// Raw text for phone number
+                                value={'+' + user?.phoneNumber}// Raw text for phone number
                                 className="p-4 text-lg md:text-xl bg-[#ebf5f5] rounded w-full mt-3 outline-none"
                                 type="text"
                                 readOnly
