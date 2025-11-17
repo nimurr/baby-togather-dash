@@ -5,10 +5,15 @@ import { Button, Modal, Input, message } from 'antd';
 import { FaArrowLeft, FaPlus } from 'react-icons/fa';
 import { RiDeleteBin6Line, RiEdit2Line } from 'react-icons/ri';
 import { Link, useParams } from 'react-router-dom';
+import { useCreateNewTaskMutation, useGetAlltasksQuery } from '../../redux/features/milestone/milestone';
 
 const MilestoneDetails = () => {
 
     const { id } = useParams();
+
+    const { data , refetch } = useGetAlltasksQuery(id);
+    console.log(data)
+    const [createTask] = useCreateNewTaskMutation();
 
     // State to manage the list of activities
     const [activities, setActivities] = useState([
@@ -26,6 +31,9 @@ const MilestoneDetails = () => {
 
     // Function to handle the opening of the modal
     const showModal = (editMode = false, activity = null) => {
+
+
+
         setIsEditMode(editMode);
         setCurrentActivity(activity);
         setNewActivity(editMode ? activity.name : '');
@@ -38,8 +46,10 @@ const MilestoneDetails = () => {
         setNewActivity('');
     };
 
+    const [tasks, setTasks] = useState('');
+
     // Function to handle adding/editing activity
-    const handleOk = () => {
+    const handleOk = async () => {
         if (!newActivity.trim()) {
             message.error('Activity name cannot be empty!');
             return;
@@ -55,10 +65,25 @@ const MilestoneDetails = () => {
             setActivities(updatedActivities);
             message.success('Activity updated successfully!');
         } else {
-            // Add new activity
-            const newId = activities.length + 1;
-            setActivities([...activities, { id: newId, name: newActivity }]);
-            message.success('Activity added successfully!');
+            const data = {
+                category: id,
+                type: tasks,
+                task: newActivity
+            }
+            try {
+                const res = await createTask(data).unwrap();
+                if (res?.code === 201) {
+                    message.success(res?.message);
+                    refetch();
+                } else {
+                    message.error(res?.message);
+                }
+            } catch (error) {
+                console.log(error)
+                message.error(error?.data?.message);
+            }
+
+
         }
 
         setIsModalVisible(false);
@@ -82,53 +107,64 @@ const MilestoneDetails = () => {
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4'>
-                <div className='border border-gray-300 pb-4 mb-4 p-5 rounded-lg shadow-md bg-white'>
-                    <div className="flex justify-between items-center mb-4 bg-[#fef7ef] p-4 rounded-lg shadow-md">
-                        <div>
-                            <h2 className="text-2xl font-semibold">Movement</h2>
-                            <p>Total (04)</p>
-                        </div>
-                        <button
-                            className='bg-[#344f47] hover:bg-[#344f47] text-white font-bold py-4 px-4 rounded-full flex items-center gap-2'
-                            onClick={() => showModal(false)}
-                        >
-                            <FaPlus className='text-2xl' />
-                        </button>
-                    </div>
-                    {/* List of Activities */}
-                    <div className='space-y-4'>
-                        {activities.map((activity) => (
-                            <div key={activity.id} className="flex justify-between items-center p-4 border-2 rounded-lg  border-gray-300">
-                                <span>{activity.name}</span>
-                                <div className="flex items-center space-x-3">
-                                    <button className='h-10 w-10 flex items-center justify-center bg-[#344f47] rounded-full' onClick={() => showModal(true, activity)}>
-                                        <RiEdit2Line className="text-lg text-white" />
-                                    </button>
-                                    <button className='h-10 w-10 flex items-center justify-center bg-[#344f47] rounded-full ' onClick={() => handleDelete(activity.id)}>
-                                        <RiDeleteBin6Line className="text-lg text-white" />
-                                    </button>
+                {
+                    [...Array(4)].map((_, index) => (
+                        <div className='border border-gray-300 pb-4 mb-4 p-5 rounded-lg shadow-md bg-white'>
+                            <div className="flex justify-between items-center mb-4 bg-[#fef7ef] p-4 rounded-lg shadow-md">
+                                <div>
+                                    <h2 className="text-2xl font-semibold"> {index == 0 ? "Movement" : index == 1 ? "Social" : index == 2 ? "Cognitive" : "Communication"} </h2>
+                                    {/* <p>Total (04)</p> */}
                                 </div>
+                                <button
+                                    className='bg-[#344f47] hover:bg-[#344f47] text-white font-bold py-4 px-4 rounded-full flex items-center gap-2'
+                                    onClick={() => {
+                                        showModal(false);
+                                        setTasks(index == 0 ? "Movement" : index == 1 ? "Social" : index == 2 ? "Cognitive" : "Communication");
+                                    }}
+                                >
+                                    <FaPlus className='text-2xl' />
+                                </button>
                             </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
+                            {/* List of Activities */}
+                            <div div className='space-y-4' >
+                                {
+                                    activities.map((activity) => (
+                                        <div key={activity.id} className="flex justify-between items-center p-4 border-2 rounded-lg  border-gray-300">
+                                            <span>{activity.name}</span>
+                                            <div className="flex items-center space-x-3">
+                                                <button className='h-10 w-10 flex items-center justify-center bg-[#344f47] rounded-full' onClick={() => showModal(true, activity, index == 0 ? "Movement" : index == 1 ? "Social" : index == 2 ? "Cognitive" : "Communication")}>
+                                                    <RiEdit2Line className="text-lg text-white" />
+                                                </button>
+                                                <button className='h-10 w-10 flex items-center justify-center bg-[#344f47] rounded-full ' onClick={() => handleDelete(activity.id)}>
+                                                    <RiDeleteBin6Line className="text-lg text-white" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                    ))
+                }
+
+            </div >
 
 
             {/* Modal for Adding and Editing Activities */}
-            <Modal
+            < Modal
                 title={isEditMode ? 'Edit Activity' : 'Add New Activity'}
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
-                footer={[
-                    <button className='bg-[#344f47] hover:bg-[#344f47] text-white font-bold py-2 px-4 rounded-lg' key="back" onClick={handleCancel}>
-                        Cancel
-                    </button>,
-                    <button className='bg-[#344f47] hover:bg-[#344f47] ml-2 text-white font-bold py-2 px-4 rounded-lg' key="submit" type="primary" onClick={handleOk}>
-                        {isEditMode ? 'Update' : 'Add'}
-                    </button>,
-                ]}
+                footer={
+                    [
+                        <button className='bg-[#344f47] hover:bg-[#344f47] text-white font-bold py-2 px-4 rounded-lg' key="back" onClick={handleCancel}>
+                            Cancel
+                        </button>,
+                        <button className='bg-[#344f47] hover:bg-[#344f47] ml-2 text-white font-bold py-2 px-4 rounded-lg' key="submit" type="primary" onClick={handleOk}>
+                            {isEditMode ? 'Update' : 'Add'}
+                        </button>,
+                    ]}
             >
                 <Input
                     className='py-3'
@@ -136,8 +172,8 @@ const MilestoneDetails = () => {
                     onChange={(e) => setNewActivity(e.target.value)}
                     placeholder="Enter activity name"
                 />
-            </Modal>
-        </div>
+            </Modal >
+        </div >
     );
 };
 

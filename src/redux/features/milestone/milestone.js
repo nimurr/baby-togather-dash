@@ -3,8 +3,8 @@ import { baseApi } from "../../baseApi/baseApi";
 const milestoneApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getAllMilestone: builder.query({
-            query: ({ name, type }) => ({
-                url: `/categories/all?name=${name}&type=${type}&sortBy=createdAt:desc`,
+            query: ({ type }) => ({
+                url: `/categories/all?type=${type}&sortBy=createdAt:desc`,
                 method: "GET",
             }),
             providesTags: ["Categories"],
@@ -24,7 +24,29 @@ const milestoneApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["Categories"],
         }),
+
+        getAlltasks: builder.query({
+            query: (id) => ({
+                url: `/baby-journey/${id}/all`,
+                method: "GET",
+            }),
+            providesTags: ["Tasks"],
+        }),
+        createNewTask: builder.mutation({
+            query: (data) => ({
+                url: "/baby-journey/create",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["Tasks"],
+        }),
     }),
 });
 
-export const { useGetAllMilestoneQuery, useCreateCategoriesForBabyMutation, useDeleteCategoriesForBabyMutation } = milestoneApi;
+export const {
+    useGetAllMilestoneQuery,
+    useCreateCategoriesForBabyMutation,
+    useDeleteCategoriesForBabyMutation,
+    useGetAlltasksQuery,
+    useCreateNewTaskMutation
+} = milestoneApi;

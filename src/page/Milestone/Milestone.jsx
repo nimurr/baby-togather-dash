@@ -9,7 +9,7 @@ import { useCreateCategoriesForBabyMutation, useDeleteCategoriesForBabyMutation,
 
 const Milestone = () => {
 
-    const { data, isLoading, refetch } = useGetAllMilestoneQuery({ name: "Month", type: "babyJourney" });
+    const { data, isLoading, refetch } = useGetAllMilestoneQuery({ type: "babyJourney" });
     const milestones = data?.data?.attributes?.results;
     console.log(milestones)
 
