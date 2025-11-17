@@ -13,7 +13,7 @@ const Personalinfo = () => {
     const { data: userProfile, refetch } = useGetUserQuery();
 
     const user = userProfile?.data?.attributes?.user;
-    console.log(userProfile);
+
 
     useEffect(() => {
         refetch();
