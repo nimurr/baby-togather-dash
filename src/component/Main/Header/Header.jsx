@@ -17,7 +17,7 @@ const Header = ({ toggleSidebar }) => {
   const { data: userProfile, refetch } = useGetUserProfileQuery();
 
   const user = userProfile?.data;
-  // console.log(user); 
+  console.log(user); 
   
   useEffect(() => {
     refetch();
@@ -46,8 +46,8 @@ const Header = ({ toggleSidebar }) => {
         </Link>
         <Link to={"/settings/personal-info"}>
           <img
-            className="w-12 rounded-full"
-            src={user?.profileImageUrl ? Url + user?.profileImageUrl : userImage}
+            className="w-12 rounded-full" 
+            src={user?.image ? Url + user?.image : userImage}
             alt="User Profile"
           />
         </Link>
