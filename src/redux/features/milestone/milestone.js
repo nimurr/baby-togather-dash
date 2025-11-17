@@ -9,6 +9,12 @@ const milestoneApi = baseApi.injectEndpoints({
             }),
             providesTags: ["Categories"],
         }),
+        getFullCetegoryDetails: builder.query({
+            query: (id) => ({
+                url: `/categories/details/${id}`,
+                method: "GET",
+            })
+        }),
         createCategoriesForBaby: builder.mutation({
             query: (data) => ({
                 url: "/categories/create",
@@ -40,13 +46,31 @@ const milestoneApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["Tasks"],
         }),
+        deleteTask: builder.mutation({
+            query: (id) => ({
+                url: `/baby-journey/delete/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Tasks"],
+        }),
+        editTask: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/baby-journey/update/${id}`,
+                method: "PATCH",
+                body: data,
+            }),
+            invalidatesTags: ["Tasks"],
+        }),
     }),
 });
 
 export const {
     useGetAllMilestoneQuery,
+    useGetFullCetegoryDetailsQuery,
     useCreateCategoriesForBabyMutation,
     useDeleteCategoriesForBabyMutation,
     useGetAlltasksQuery,
-    useCreateNewTaskMutation
+    useCreateNewTaskMutation,
+    useDeleteTaskMutation,
+    useEditTaskMutation
 } = milestoneApi;
