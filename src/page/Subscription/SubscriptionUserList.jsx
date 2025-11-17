@@ -39,8 +39,8 @@ const SubscriptionUserList = () => {
             setDataSource(
                 fullData?.filter(
                     (user) =>
-                        user?.userId?.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
-                        user?.userId?.email.toLowerCase().includes(searchText.toLowerCase()) ||
+                        user?.userId?.fullName?.toLowerCase().includes(searchText.toLowerCase()) ||
+                        user?.userId?.email?.toLowerCase().includes(searchText.toLowerCase()) ||
                         String(user?.userId?.phoneNumber).includes(searchText)
                 )
             );
@@ -166,7 +166,7 @@ const SubscriptionUserList = () => {
                                     src={Url + userDataFull?.userId?.image || "/logo/userimage.png"}
                                     alt="User"
                                 />
-                                <h1 className="text-2xl font-semibold">{userDataFull?.userId.fullName}</h1>
+                                <h1 className="text-2xl font-semibold">{userDataFull?.userId?.fullName}</h1>
                             </div>
                         </div>
 
@@ -174,27 +174,27 @@ const SubscriptionUserList = () => {
                         <div className="space-y-3">
                             <div className="flex items-center justify-between py-3 border-b-2 border-[#00000042]">
                                 <span className="font-semibold">Name</span>
-                                <span>{userDataFull?.userId.fullName}</span>
+                                <span>{userDataFull?.userId?.fullName}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-b-2 border-[#00000042]">
                                 <span className="font-semibold">Email</span>
-                                <span>{userDataFull?.userId.email}</span>
+                                <span>{userDataFull?.userId?.email}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-b-2 border-[#00000042]">
                                 <span className="font-semibold">Status</span>
-                                <span>{userDataFull?.userId.status || "N/A"}</span>
+                                <span>{userDataFull?.userId?.status || "N/A"}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-b-2 border-[#00000042]">
                                 <span className="font-semibold">Phone Number</span>
-                                <span>{userDataFull?.userId.phoneNumber}</span>
+                                <span>{userDataFull?.userId?.phoneNumber}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-b-2 border-[#00000042]">
                                 <span className="font-semibold">User Type</span>
-                                <span className="capitalize">{userDataFull?.userId.role}</span>
+                                <span className="capitalize">{userDataFull?.userId?.role}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-b-2 border-[#00000042]">
                                 <span className="font-semibold">Joining Date</span>
-                                <span>{moment(userDataFull?.userId.createdAt).format("DD MMM YYYY")}</span>
+                                <span>{moment(userDataFull?.userId?.createdAt).format("DD MMM YYYY")}</span>
                             </div>
                         </div>
                     </div>

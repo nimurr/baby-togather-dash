@@ -4,9 +4,12 @@ import React, { useState } from 'react';
 import { Button, Modal, Input, message } from 'antd';
 import { FaArrowLeft, FaPlus } from 'react-icons/fa';
 import { RiDeleteBin6Line, RiEdit2Line } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const MilestoneDetails = () => {
+
+    const { id } = useParams();
+
     // State to manage the list of activities
     const [activities, setActivities] = useState([
         { id: 1, name: 'Opens and closes hands' },
