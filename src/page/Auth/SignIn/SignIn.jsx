@@ -39,6 +39,8 @@ const SignIn = () => {
             token: res?.data?.attributes?.tokens?.access?.token
           })
         );
+        localStorage.setItem("token", res?.data?.attributes?.tokens?.access?.token);
+        localStorage.setItem("user", JSON.stringify(res?.data?.attributes?.user));
         toast.success(res?.message);
       }
 

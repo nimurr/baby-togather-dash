@@ -75,6 +75,8 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
 
   const handleLogout = () => {
     dispatch(logoutUser());
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/auth");
   };
 
@@ -146,8 +148,8 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           }}
           className="flex items-center gap-2 px-10 ml-5 mt-5"
         >
-          <IoIosLogOut className="size-8   p-1 text-[#344f47] rounded-md" />
-          <span className="text-[#344f47] ">Logout</span>
+          <IoIosLogOut className="size-8   p-1 text-[#ff2f2f] rounded-md" />
+          <span className="text-[#ff2f2f] ">Logout</span>
         </button>
       </div>
 
