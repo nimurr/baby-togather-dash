@@ -6,6 +6,7 @@ import { FaAngleLeft, FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { IoEyeOutline } from "react-icons/io5";
 import { useGetAllUsersQuery } from "../../../redux/features/user/userApi";
+import Url from "../../../redux/baseApi/forImageUrl";
 
 const { Item } = Form;
 
@@ -169,7 +170,7 @@ const Users = () => {
               <div className="flex items-center gap-5">
                 <img
                   className="w-24 h-24 rounded-full"
-                  src="../../../public/logo/userimage.png"
+                  src={Url + userDataFull?.image}
                   alt="User"
                 />
                 <h1 className="text-2xl font-semibold">{userDataFull?.fullName}</h1>
