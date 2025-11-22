@@ -191,16 +191,16 @@ const Subscription = () => {
                         <div className="gap-3 p-5">
                             {/* delete button  */}
                             <button
-                                onClick={() => handleDelete(subscription?.id)}
-                                className="w-full py-3 px-6 border bg-[#b1251b] text-white rounded-lg"
-                            >
-                                Delete
-                            </button>
-                            <button
                                 onClick={() => showModal(true, subscription)} // Open modal for editing the selected subscription
                                 className="w-full py-3 px-6 border bg-[#344f47] text-white rounded-lg"
                             >
                                 Edit Package
+                            </button>
+                            <button
+                                onClick={() => handleDelete(subscription?.id)}
+                                className="w-full py-3 px-6 border bg-[#b1251b] text-white rounded-lg"
+                            >
+                                Delete
                             </button>
                         </div>
                     </div>
