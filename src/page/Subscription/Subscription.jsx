@@ -186,7 +186,7 @@ const Subscription = () => {
                             </ul>
                         </div>
                         <div className="border-t-2 border-b-2 border-[#344f47] py-2 text-center my-3">
-                            <p className="text-5xl font-semibold text-[#344f47] gap-2">{subscription?.amount} <span className="text-base font-semibold text-black">/ {subscription?.limitation}</span></p>
+                            <p className="text-5xl font-semibold text-[#344f47] gap-2">{subscription?.amount} <span className="text-base font-semibold text-black capitalize">/{subscription?.limitation}</span></p>
                         </div>
                         <div className="gap-3 p-5">
                             {/* delete button  */}
