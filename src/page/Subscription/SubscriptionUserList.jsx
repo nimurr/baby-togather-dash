@@ -13,8 +13,9 @@ const { Item } = Form;
 
 const SubscriptionUserList = () => {
     const { data, isLoading } = useGetAllSubscribersQuery();  // Fetch the subscription data from API
-    const fullData = data?.data?.attributes || [];
+    const fullData = data?.data?.attributes?.results || [];
     console.log(fullData);
+
 
 
     const [searchText, setSearchText] = useState("");
@@ -100,7 +101,7 @@ const SubscriptionUserList = () => {
             <div className="md:flex justify-between items-center py-6 mb-4">
                 <Link to={"/subscription"} className="text-2xl flex items-center">
                     <FaAngleLeft />  Subscriptions User list  {detailsVisible ? "Details" : ""}
-                </Link> 
+                </Link>
                 <Form layout="inline" className="flex space-x-4">
                     <Item name="date">
                         <DatePicker

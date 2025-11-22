@@ -16,7 +16,7 @@ const Subscription = () => {
 
     // Fetch all subscriptions
     const { data, refetch } = useGetSubScriptionQuery();
-    const subscriptionData = data?.data?.attributes;
+    const subscriptionData = data?.data?.attributes?.results || [];
 
 
     const [createSubscription, { isLoading }] = useCreateSubScriptionMutation(); // Create subscription mutation
