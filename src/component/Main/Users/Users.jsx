@@ -4,18 +4,19 @@ import moment from "moment";
 import { IoIosSearch } from "react-icons/io";
 import { FaAngleLeft, FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { GoInfo } from "react-icons/go";
 import { IoEyeOutline } from "react-icons/io5";
 import { useGetAllUsersQuery } from "../../../redux/features/user/userApi";
 
 const { Item } = Form;
 
 const Users = () => {
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
-
-  const { data: mainData, isLoading } = useGetAllUsersQuery();
+  const { data: mainData, isLoading } = useGetAllUsersQuery({ page, limit });
   const data = mainData?.data?.attributes?.results || [];
-  console.log(data);
+  const total = mainData?.data?.attributes?.totalResults; // total results, used for calculating pages
+  const totalPages = mainData?.data?.attributes?.totalPages; // total pages, used for pagination
 
   useEffect(() => {
     if (data) {
@@ -26,16 +27,16 @@ const Users = () => {
   const [searchText, setSearchText] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataSource, setDataSource] = useState([]); // Initialize with demo data
+  const [dataSource, setDataSource] = useState([]);
 
   // User details visibility state
   const [detailsVisible, setDetailsVisible] = useState(false);
-  const [userDataFull, setUserDataFull] = useState(null); // Store full user data for the selected user
+  const [userDataFull, setUserDataFull] = useState(null);
 
   // Search Filter
   useEffect(() => {
     if (searchText.trim() === "") {
-      setDataSource(data); // Reset to all users
+      setDataSource(data);
     } else {
       setDataSource(
         data?.filter(
@@ -51,7 +52,7 @@ const Users = () => {
   // Date Filter
   useEffect(() => {
     if (!selectedDate) {
-      setDataSource(data); // Reset to all users if no date is selected
+      setDataSource(data);
     } else {
       const formattedDate = selectedDate.format("YYYY-MM-DD");
       setDataSource(
@@ -63,8 +64,13 @@ const Users = () => {
   }, [selectedDate]);
 
   const handleShowDetails = (user) => {
-    setUserDataFull(user); // Set the selected user details
-    setDetailsVisible(true); // Show user details section
+    setUserDataFull(user);
+    setDetailsVisible(true);
+  };
+
+  const handlePaginationChange = (newPage) => {
+    setPage(newPage);
+    setCurrentPage(newPage);  // This will update the pagination component's page state
   };
 
   const columns = [
@@ -121,7 +127,7 @@ const Users = () => {
         </Form>
       </div>
 
-      <div className={`${detailsVisible ? "grid lg:grid-cols-2 gap-5" : "block"} duration-500`}>
+      <div className={`${detailsVisible ? "grid xl:grid-cols-2 gap-5" : "block"} duration-500`}>
         <ConfigProvider
           theme={{
             components: {
@@ -138,7 +144,9 @@ const Users = () => {
             pagination={{
               position: ["bottomRight"],
               current: currentPage,
-              onChange: setCurrentPage,
+              pageSize: limit,
+              total: total, // total number of results
+              onChange: handlePaginationChange, // This will trigger API call on page change
             }}
             scroll={{ x: "max-content" }}
             responsive={true}
@@ -197,11 +205,7 @@ const Users = () => {
               </div>
             </div>
           </div>
-
-
         </div>
-
-
       </div>
     </section>
   );

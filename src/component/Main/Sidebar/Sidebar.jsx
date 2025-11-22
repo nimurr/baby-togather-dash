@@ -34,7 +34,7 @@ const sidebarItems = [
 
   {
     path: "/baby-cuse",
-    name: "Baby Cuse",
+    name: "Baby Cues",
     icon: <PiBabyFill className="size-6" />,
   },
   {
