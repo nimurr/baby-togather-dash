@@ -74,7 +74,7 @@ const Notification = () => {
     ],
   };
 
-  const pageSize = 5; // Show 5 notifications per page
+  const pageSize = 10; // Show 5 notifications per page
 
   // Pagination Logic
   const paginatedNotifications = allNotification?.notifications.slice(
@@ -92,15 +92,15 @@ const Notification = () => {
         <FaAngleLeft /> Notification
       </Link>
 
-      <div className="space-y-4">
+      <div className="space-y-2">
         {paginatedNotifications?.map((item) => (
           <div
             key={item.id}
-            className="border border-[#344f47] hover:bg-[#344f473b] cursor-pointer rounded-md p-4 flex items-center space-x-4"
+            className="border border-[#344f47] hover:bg-[#344f473b] cursor-pointer rounded-md p-1 flex items-center space-x-4"
           >
-            <div className="text-[#344f47] border border-[#344f47] rounded-full p-2">
-              <span className="bg-[#344f47] p-1.5 rounded-full absolute ml-4 z-20"></span>
-              <IoMdNotificationsOutline size={30} className="relative" />
+            <div className="text-[#344f47] border border-[#344f47] rounded-full p-1">
+              <span className="bg-[#344f47] p-1 rounded-full absolute ml-3.5 z-20"></span>
+              <IoMdNotificationsOutline size={25} className="relative" />
             </div>
             <div>
               <p className="font-semibold">{item?.message}</p>
