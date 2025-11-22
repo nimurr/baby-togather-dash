@@ -6,7 +6,7 @@ import { IoEyeOutline } from "react-icons/io5";
 import { useGetDashboardStatusQuery } from "../../../redux/features/dashboard/dashboardApi";
 import Url from "../../../redux/baseApi/forImageUrl";
 
-const RecentTransactions = ({fullData}) => {
+const RecentTransactions = ({ fullData }) => {
 
 
   console.log(fullData?.users)
