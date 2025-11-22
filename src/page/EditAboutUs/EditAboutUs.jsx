@@ -4,10 +4,10 @@ import { Button, Form, message } from "antd";
 import ReactQuill from "react-quill"; // Import React Quill
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
 import { useEffect, useState } from "react";
-import { useGetAllSettingsQuery, useUpdateAboutUsMutation } from "../../redux/features/setting/settingApi";
+import { useGetAllSettingsQuery, useUpdateAboutUsMutation, useUpdatePrivacyPolicyMutation } from "../../redux/features/setting/settingApi";
 
 const EditAboutUs = () => {
-  const [updateAboutUs, { isLoading }] = useUpdateAboutUsMutation();
+  const [updateAboutUs, { isLoading }] = useUpdatePrivacyPolicyMutation();
   const { data: privacyPolicy, isFetching } = useGetAllSettingsQuery();
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -26,8 +26,9 @@ const EditAboutUs = () => {
     console.log("Updated About Us Content:", content);
 
     try {
-      const res = await updateAboutUs({ aboutUs: content }).unwrap();
-      if (res?.success) {
+      const res = await updateAboutUs({ content: content }).unwrap();
+      console.log(res)
+      if (res?.code === 201 || res?.code === 200) {
         message.success(res?.message);
         navigate("/settings/about-us");
       }
@@ -82,7 +83,7 @@ const EditAboutUs = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-[#344f47] text-white px-5 text-xl py-2 rounded-md"
+              className="bg-[#344f47] text-white px-5 text-xl py-2 h-10 mt-2 rounded-md"
               loading={isLoading || isFetching} // Show loading state
             >
               {isLoading || isFetching ? "Updating..." : "Update"}

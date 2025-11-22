@@ -4,7 +4,7 @@ import ReactQuill from "react-quill"; // Import React Quill
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
 import { useState, useEffect } from "react";
 import { Form, message } from "antd";
-import { useUpdatePrivacyPolicyAllMutation } from "../../redux/features/setting/settingApi"; // ✅ FIXED
+import { useUpdatePrivacyPolicyMutation } from "../../redux/features/setting/settingApi"; // ✅ FIXED
 import { useGetAllSettingsOthersQuery } from "../../redux/features/setting/getAllData";
 
 const EditPrivacyPolicy = () => {
@@ -15,7 +15,7 @@ const EditPrivacyPolicy = () => {
   const { data, isLoading: loading, refetch } = useGetAllSettingsOthersQuery(type);
   const contentMain = data?.data?.attributes?.content || ""; // Ensure default content is empty if not available
 
-  const [updatePrivacyPolicy, { isLoading }] = useUpdatePrivacyPolicyAllMutation(); // ✅ FIXED
+  const [updatePrivacyPolicy, { isLoading }] = useUpdatePrivacyPolicyMutation(); // ✅ FIXED
   const navigate = useNavigate();
 
   // ✅ **Ensure content is set when data is available**
@@ -86,7 +86,7 @@ const EditPrivacyPolicy = () => {
           <div className="w-full flex justify-end mt-20 md:mt-16">
             <button
               type="submit"
-              className="bg-[#344f47] text-white text-xl gap-2 py-2 px-8 rounded-md font-bold"
+              className="bg-[#344f47] text-white text-xl gap-2 py-2 px-8 mt-2 rounded-md font-bold"
               disabled={isLoading}
             >
               {isLoading ? "Updating..." : "Update"}

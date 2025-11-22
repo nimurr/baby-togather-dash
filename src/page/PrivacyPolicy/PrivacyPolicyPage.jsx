@@ -1,21 +1,22 @@
 import { IoChevronBack } from "react-icons/io5";
-import { TbEdit } from "react-icons/tb";
 import { Link } from "react-router-dom";
+import { TbEdit } from "react-icons/tb";
 import CustomButton from "../../utils/CustomButton";
-import { Spin } from "antd"; // Importing Spin   
+import { Spin } from "antd"; // Importing Spin
 import { useEffect } from "react";
-import { useGetAllSettingsOthersQuery } from "../../redux/features/setting/getAllData";
+import { useGetPrivacyPolicyQuery } from "../../redux/features/setting/settingApi";
 
-const PrivacyPolicyPage = () => {
+const AboutUsPage = () => {
 
-  const type = "privacy_policy"
-  const { data, isLoading, refetch } = useGetAllSettingsOthersQuery(type);
-  const content = data?.data?.attributes?.content;
-
+  const type = "about_us"
+  const { data, isLoading, refetch } = useGetPrivacyPolicyQuery(type);
+  const content = data?.data?.attributes[0]?.content;
+  console.log(content);
 
   useEffect(() => {
     refetch();
   }, []);
+
 
 
   return (
@@ -27,8 +28,11 @@ const PrivacyPolicyPage = () => {
           </>
           <h1 className="text-2xl font-semibold">Privacy Policy</h1>
         </Link>
-        <Link to={'/settings/edit-privacy-policy'}>
-          <button className="bg-[#344f47] text-white flex items-center gap-2 p-2 rounded-md font-bold" border>
+        <Link to={"/settings/edit-privacy-policy"}>
+          <button
+            className="bg-[#344f47] text-white flex items-center gap-2 p-2 rounded-md font-bold"
+            border
+          >
             <TbEdit className="size-5" />
             <span>Edit</span>
           </button>
@@ -36,20 +40,17 @@ const PrivacyPolicyPage = () => {
       </div>
 
       {/* Show Spin loader if data is loading */}
-
       {isLoading ? (
-        <div className="w-full h-full flex justify-center items-center">
+        <div className="flex justify-center items-center h-screen">
           <Spin size="large" />
         </div>
       ) : (
-        <div className="w-full h-full ml-3">
-          <div dangerouslySetInnerHTML={{ __html: content }} />
-
-        </div>
+        <div dangerouslySetInnerHTML={{ __html: content }} />
       )}
+
 
     </section>
   );
-}
+};
 
-export default PrivacyPolicyPage;
+export default AboutUsPage;

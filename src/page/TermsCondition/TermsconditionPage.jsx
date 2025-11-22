@@ -5,13 +5,15 @@ import CustomButton from "../../utils/CustomButton";
 import { Spin } from "antd"; // Importing Spin
 import { useEffect } from "react";
 import { useGetAllSettingsOthersQuery } from "../../redux/features/setting/getAllData";
+import { useGetTermsAndConditionsQuery } from "../../redux/features/setting/settingApi";
 
 const TermsconditionPage = () => {
 
   const type = "terms_and_conditions"
-  const { data, isLoading, refetch } = useGetAllSettingsOthersQuery(type);
-  const content = data?.data?.attributes?.content;
- 
+  const { data, isLoading, refetch } = useGetTermsAndConditionsQuery();
+  const content = data?.data?.attributes[0]?.content || "";
+  console.log(content)
+
 
   useEffect(() => {
     refetch();

@@ -39,15 +39,48 @@ const settingApi = baseApi.injectEndpoints({
 
     updateTramsAndConditionsAll: builder.mutation({  // ✅ FIXED: Use mutation instead of query
       query: (data) => ({
-        url: "/general-info/update/terms-and-conditions",
+        url: "/info/terms-condition",
         method: "POST",
         body: data,
       }),
       invalidatesTags: ["Setting"],
     }),
+    getTermsAndConditions: builder.query({
+      query: () => ({
+        url: "/info/terms-condition",
+        method: "GET",
+        providesTags: ["Setting"],
+      }),
+    }),
+
+
     updateAboutUs: builder.mutation({  // ✅ FIXED: Use mutation instead of query
       query: (data) => ({
-        url: "/general-info/update/about-us",
+        url: "/info/about-us",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Setting"],
+    }),
+
+    getAboutUs: builder.query({
+      query: () => ({
+        url: "/info/about-us",
+        method: "GET",
+        providesTags: ["Setting"],
+      }),
+    }),
+
+    getPrivacyPolicy: builder.query({
+      query: () => ({
+        url: "/info/privacy-policy",
+        method: "GET",
+        providesTags: ["Setting"],
+      }),
+    }),
+    updatePrivacyPolicy: builder.mutation({  // ✅ FIXED: Use mutation instead of query
+      query: (data) => ({
+        url: "/info/privacy-policy",
         method: "POST",
         body: data,
       }),
@@ -91,11 +124,16 @@ export const {
   useGetAllSettingsQuery,
   useUpdatePrivacyPolicyAllMutation, // ✅ FIXED: Mutation hook 
   useUpdateTramsAndConditionsAllMutation,
-
+  useGetTermsAndConditionsQuery,
   useAddFaqMainMutation,
   useDeleteFaqMutation,
 
   useUpdateAboutUsMutation,
+  useGetAboutUsQuery,
+
+  useGetPrivacyPolicyQuery,
+  useUpdatePrivacyPolicyMutation,
+
   useGetUserProfileQuery,
   useUpdateProfileMutation,
 
