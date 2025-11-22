@@ -170,7 +170,7 @@ const Subscription = () => {
             {/* Subscriptions Grid */}
             <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-2 gap-5">
                 {subscriptionData?.map((subscription) => (
-                    <div key={subscription.id} className="border-2 border-[#344f47] rounded-lg overflow-hidden">
+                    <div key={subscription.id} className="border-2 border-[#344f47] rounded-lg  overflow-hidden">
                         <div className="p-5">
                             <h2 className="text-3xl font-semibold text-[#344f47] flex items-center gap-2">
                                 <div className="h-10 w-10 rounded-full bg-[#344f47] text-white flex justify-center items-center">
