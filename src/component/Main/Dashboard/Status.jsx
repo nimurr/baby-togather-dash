@@ -2,9 +2,8 @@ import { useGetDashboardStatusQuery } from "../../../redux/features/dashboard/da
 import dashboardIcon from "/public/logo/dashboard-icon.png";
 import { FaArrowTrendUp } from "react-icons/fa6";
 
-const Status = () => {
-  const { data, isLoading } = useGetDashboardStatusQuery();
-  const fullData = data?.data?.attributes; 
+const Status = ({ fullData }) => {
+  console.log(fullData?.babyCare)
 
   return (
     <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
@@ -27,11 +26,11 @@ const Status = () => {
       <div className="shadow-[0_4px_10px_rgba(0,0,0,0.2)] p-5 rounded-lg border-2 border-[#344f47] bg-white">
         <div className="flex items-center gap-5">
           <img src={dashboardIcon} className="w-16" alt="" />
-          <h2 className="text-2xl font-semibold">Baby Cuse</h2>
+          <h2 className="text-2xl font-semibold">Baby Cues</h2>
         </div>
         <div className="flex items-center mt-5 gap-3">
           <h1 className="text-4xl font-semibold text-[#222222]">
-            {data?.babyCare || "0"}
+            {fullData?.babyCare || "0"}
           </h1>
           {/* <h1>Last month total  1050</h1> */}
         </div>
@@ -40,11 +39,11 @@ const Status = () => {
       <div className="shadow-[0_4px_10px_rgba(0,0,0,0.2)] p-5 rounded-lg border-2 border-[#344f47] bg-white">
         <div className="flex items-center gap-5">
           <img src={dashboardIcon} className="w-16" alt="" />
-          <h2 className="text-2xl font-semibold">Total  Milestone</h2>
+          <h2 className="text-2xl font-semibold">Total  Journey</h2>
         </div>
         <div className="flex items-center mt-5 gap-3">
           <h1 className="text-4xl font-semibold text-[#222222]">
-            {data?.journey || "0"}
+            {fullData?.journey || "0"}
           </h1>
         </div>
       </div>

@@ -2,8 +2,13 @@ import IncomeGraphChart from "../../component/Main/Dashboard/IncomeGraphChart";
 import Piechart from "../../component/Main/Dashboard/Piechart";
 import RecentTransactions from "../../component/Main/Dashboard/RecentTransactions";
 import Status from "../../component/Main/Dashboard/Status";
+import { useGetDashboardStatusQuery } from "../../redux/features/dashboard/dashboardApi";
 const DashboardHome = () => {
   const time = new Date().getHours();
+
+  const { data, isLoading } = useGetDashboardStatusQuery(); // You can add data fetching logic here if needed
+  const fullData = data?.data?.attributes;
+  console.log(fullData)
 
 
   return (
@@ -21,12 +26,12 @@ const DashboardHome = () => {
         </div>
       }  </h1>
       <div className="px-3">
-        <Status />
+        <Status fullData={fullData} />
         <div className="grid grid-cols-1 md:grid-cols-6 gap-5 pt-10">
           <IncomeGraphChart />
           <Piechart />
         </div>
-        <RecentTransactions />
+        <RecentTransactions  fullData={fullData}/>
       </div>
     </section>
   );

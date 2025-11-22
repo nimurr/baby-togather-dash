@@ -6,10 +6,9 @@ import { IoEyeOutline } from "react-icons/io5";
 import { useGetDashboardStatusQuery } from "../../../redux/features/dashboard/dashboardApi";
 import Url from "../../../redux/baseApi/forImageUrl";
 
-const RecentTransactions = () => {
+const RecentTransactions = ({fullData}) => {
 
-  const { data, isLoading } = useGetDashboardStatusQuery();
-  const fullData = data?.data?.attributes;
+
   console.log(fullData?.users)
 
   const [searchText, setSearchText] = useState("");
