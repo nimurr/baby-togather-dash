@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Input, Select, Button, message } from 'antd';
+import { Modal, Input, Select, Button, message, Checkbox, List } from 'antd';
 import { FaPlus } from 'react-icons/fa';
 import { AiFillCrown } from 'react-icons/ai';
 import { FaRegCircleCheck } from 'react-icons/fa6';
@@ -13,11 +13,19 @@ const Subscription = () => {
     const [unitType, setUnitType] = useState('monthly'); // Adjust default to "monthly"
     const [price, setPrice] = useState('');
     const [currentSubscriptionId, setCurrentSubscriptionId] = useState(null); // For keeping track of the subscription being edited
+    const [selectedFeatures, setSelectedFeatures] = useState([]); // For storing selected features in the modal
+    const [newFeature, setNewFeature] = useState(''); // For adding a new feature dynamically
+
+    // Available features for subscriptions (This can be dynamic if required)
+    const availableFeatures = [
+        "limited profile views per day",
+        "limited voice notes and message",
+        "standard verification process"
+    ];
 
     // Fetch all subscriptions
     const { data, refetch } = useGetSubScriptionQuery();
     const subscriptionData = data?.data?.attributes?.results || [];
-
 
     const [createSubscription, { isLoading }] = useCreateSubScriptionMutation(); // Create subscription mutation
     const [updateSubscription, { isLoading: updateLoading }] = useUpdateScriptionMutation(); // Update subscription mutation
@@ -28,16 +36,18 @@ const Subscription = () => {
         setIsModalVisible(true);
 
         if (edit) {
-            setSubscriptionName(subscription.name);
-            setUnitType(subscription.type);
+            setSubscriptionName(subscription.title);
+            setUnitType(subscription.limitation);
             setPrice(subscription.amount);
             setCurrentSubscriptionId(subscription.id); // Set the subscription ID for editing
+            setSelectedFeatures(subscription.features || []); // Set selected features for editing
         } else {
             // Reset all fields for creating a new subscription
             setSubscriptionName('');
             setUnitType('monthly');
             setPrice('');
             setCurrentSubscriptionId(null);
+            setSelectedFeatures([]); // Reset features for new subscription
         }
     };
 
@@ -48,28 +58,47 @@ const Subscription = () => {
         setUnitType('monthly');
         setPrice('');
         setCurrentSubscriptionId(null); // Clear the ID when closing the modal
+        setSelectedFeatures([]); // Clear selected features
+        setNewFeature(''); // Clear new feature input
+    };
+
+    // Add a new feature to the selected features list
+    const handleAddFeature = () => {
+        if (newFeature && !selectedFeatures.includes(newFeature)) {
+            setSelectedFeatures([...selectedFeatures, newFeature]);
+            setNewFeature(''); // Clear the input after adding
+        } else {
+            message.error('Feature is either empty or already added');
+        }
+    };
+
+    // Remove a feature from the selected features list
+    const handleRemoveFeature = (feature) => {
+        setSelectedFeatures(selectedFeatures.filter(f => f !== feature));
     };
 
     // Handle form submit for adding subscription
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!subscriptionName || !unitType || !price) {
-            message.error('Please fill all fields!');
+        if (!subscriptionName || !unitType || !price || selectedFeatures.length === 0) {
+            message.error('Please fill all fields and select features!');
             return;
         }
 
         const formData = {
-            name: subscriptionName,
+            title: subscriptionName,
             amount: parseFloat(price),
-            type: unitType, // Use the type directly from the dropdown
-            userId: "68d51587c07c8758db5b59db", // Assuming a fixed userId or logic to get it
+            limitation: unitType, // Use the type directly from the dropdown
+            features: selectedFeatures, // Add features
         };
+
+        console.log(formData)
 
         // Call the create subscription API
         try {
             const response = await createSubscription(formData);
             console.log(response)
-            if (response?.data?.code === 200) {
+            if (response?.data?.code === 201) {
                 message.success('Subscription added successfully!');
                 handleCancel(); // Close the modal after successful submission
             }
@@ -84,15 +113,19 @@ const Subscription = () => {
         e.preventDefault();
 
         const formData = {
-            name: subscriptionName,
+            title: subscriptionName,
             amount: parseFloat(price),
-            type: unitType, // Use the type directly from the dropdown
+            limitation: unitType, // Use the type directly from the dropdown
+            features: selectedFeatures, // Add features
         };
+
+        console.log(formData)
 
         // Call the update subscription API
         try {
             const response = await updateSubscription({ id: currentSubscriptionId, formData });
-            if (response?.data?.code === 201) {
+            console.log(response)
+            if (response?.data?.code === 200) {
                 message.success('Subscription updated successfully!');
                 handleCancel(); // Close the modal after successful update
             }
@@ -106,6 +139,7 @@ const Subscription = () => {
     const handleDelete = async (index) => {
         try {
             const response = await deleteSubscription(index);
+            console.log(response)
             if (response?.data?.code === 200) {
                 message.success('Subscription deleted successfully!');
             }
@@ -142,9 +176,9 @@ const Subscription = () => {
                                 <div className="h-10 w-10 rounded-full bg-[#344f47] text-white flex justify-center items-center">
                                     <AiFillCrown className="size-6" />
                                 </div>
-                                {subscription.name}
+                                {subscription?.title}
                             </h2>
-                            <h3 className="text-2xl font-semibold mt-5">Unit type</h3>
+                            <h3 className="text-2xl font-semibold mt-5">Features</h3>
                             <ul className="list-disc pl-4">
                                 {subscription?.features?.map((feature, index) => (
                                     <p className="mt-2 font-semibold text-xl gap-2 flex items-center"><FaRegCircleCheck className="text-[#344f47]" /> {feature}</p>
@@ -152,7 +186,7 @@ const Subscription = () => {
                             </ul>
                         </div>
                         <div className="border-t-2 border-b-2 border-[#344f47] py-2 text-center my-3">
-                            <p className="text-5xl font-semibold text-[#344f47] gap-2">{subscription.amount} <span className="text-base font-semibold text-black">/ {subscription.type}</span></p>
+                            <p className="text-5xl font-semibold text-[#344f47] gap-2">{subscription?.amount} <span className="text-base font-semibold text-black">/ {subscription?.limitation}</span></p>
                         </div>
                         <div className="gap-3 p-5">
                             {/* delete button  */}
@@ -212,6 +246,39 @@ const Subscription = () => {
                             value={price}
                             type="number"
                             onChange={(e) => setPrice(e.target.value)}
+                        />
+                    </div>
+
+                    {/* Add Feature */}
+                    <div className="my-3">
+                        <span className="block mb-2 font-semibold">Add New Feature</span>
+                        <Input
+                            className="w-full py-3"
+                            placeholder="Enter feature"
+                            value={newFeature}
+                            onChange={(e) => setNewFeature(e.target.value)}
+                        />
+                        <Button onClick={handleAddFeature} className="mt-2 w-full">Add Feature</Button>
+                    </div>
+
+                    {/* Display Selected Features */}
+                    <div className="my-3">
+                        <span className="block mb-2 font-semibold">Selected Features</span>
+                        <List
+                            bordered
+                            dataSource={selectedFeatures}
+                            renderItem={(feature) => (
+                                <List.Item>
+                                    <span>{feature}</span>
+                                    <Button
+                                        type="link"
+                                        danger
+                                        onClick={() => handleRemoveFeature(feature)}
+                                    >
+                                        Remove
+                                    </Button>
+                                </List.Item>
+                            )}
                         />
                     </div>
 

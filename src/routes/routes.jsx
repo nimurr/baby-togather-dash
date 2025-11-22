@@ -145,7 +145,6 @@ const router = createBrowserRouter([
         element: <PersonalinfoEdit />,
       },
 
-
       {
         path: "settings/privacy-policy",
         element: <PrivacyPolicyPage />,
