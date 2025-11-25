@@ -74,6 +74,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   const [showModal, setShowModal] = useState(false);
 
   const handleLogout = () => {
+    // remove token from dispatch
     dispatch(logoutUser());
     localStorage.removeItem("token");
     localStorage.removeItem("user");

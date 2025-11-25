@@ -24,7 +24,7 @@ const SignIn = () => {
     }
     try {
       const res = await login(data).unwrap();
-      console.log(res?.data?.attributes?.tokens?.access?.token);
+      console.log(res);
 
 
       // navigate("/");
@@ -34,17 +34,17 @@ const SignIn = () => {
         console.log(res.error.data.message);
       }
       if (res) {
+        localStorage.setItem("token", res?.data?.attributes?.tokens?.access?.token);
+        localStorage.setItem("user", JSON.stringify(res?.data?.attributes?.user));
         dispatch(
           loggedUser({
             token: res?.data?.attributes?.tokens?.access?.token
           })
         );
-        localStorage.setItem("token", res?.data?.attributes?.tokens?.access?.token);
-        localStorage.setItem("user", JSON.stringify(res?.data?.attributes?.user));
         toast.success(res?.message);
+        navigate("/");
       }
 
-      navigate("/");
 
 
     } catch (error) {
