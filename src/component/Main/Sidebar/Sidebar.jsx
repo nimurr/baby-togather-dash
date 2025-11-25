@@ -15,7 +15,7 @@ import { FaRegMoneyBill1, FaSackDollar } from "react-icons/fa6";
 import { GoHomeFill } from "react-icons/go";
 import { GrDocumentImage } from "react-icons/gr";
 import { RxCross1 } from "react-icons/rx";
-import logoimage from '/public/logo/Logo-Orange.png';
+import logoimage from '/logo/Logo-Orange.png';
 import { AiFillCrown } from "react-icons/ai";
 import { PiBabyFill, PiBuildingApartmentLight } from "react-icons/pi";
 import { TfiCup } from "react-icons/tfi";
