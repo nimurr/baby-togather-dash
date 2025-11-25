@@ -3,8 +3,8 @@ import { baseApi } from "../../baseApi/baseApi";
 const babucareApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getAllBabucare: builder.query({
-            query: (type) => ({
-                url: `/baby-care/all?category=${type}`,
+            query: ({type , page , limit}) => ({
+                url: `/baby-care/all?category=${type}&page=${page}&limit=${limit}`,
                 method: "GET",
             }),
             providesTags: ["Babucare"],

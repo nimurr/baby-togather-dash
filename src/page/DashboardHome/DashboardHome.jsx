@@ -8,7 +8,6 @@ const DashboardHome = () => {
 
   const { data, isLoading } = useGetDashboardStatusQuery(); // You can add data fetching logic here if needed
   const fullData = data?.data?.attributes;
-  console.log(fullData)
 
 
   return (
@@ -31,7 +30,7 @@ const DashboardHome = () => {
           <IncomeGraphChart />
           <Piechart />
         </div>
-        <RecentTransactions  fullData={fullData}/>
+        <RecentTransactions fullData={fullData} />
       </div>
     </section>
   );
