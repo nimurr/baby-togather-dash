@@ -18,4 +18,3 @@ export const baseApi = createApi({
   tagTypes: ["User", "Categories", "Babucare", "ComboBox", "Products", "BuildBox", 'User-2', "Subscription", "Setting", 'Privacy-Policy', "Profile", "Document", "Lawyer"],
   endpoints: () => ({}),
 });
- 
